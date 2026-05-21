@@ -1,0 +1,115 @@
+---
+title: "LSP client in Vorto: features, servers, and project roots"
+description: "Understand how Vorto's LSP client works, which features it provides, how project roots are detected, and how to configure or add custom language servers."
+---
+
+Vorto includes a built-in Language Server Protocol client that connects to language servers running as external processes. When you open a file, Vorto identifies the language, looks up the configured server for that language, spawns it if it isn't already running, and begins exchanging messages over stdin/stdout using JSON-RPC. All communication happens in the background; the editor remains fully responsive.
+
+## Supported LSP features
+
+Vorto's LSP client implements the following capabilities:
+
+| Feature | Description |
+|---------|-------------|
+| Diagnostics | Errors and warnings pushed by the server appear inline as you edit |
+| Hover | Show documentation and type information for the symbol under the cursor |
+| Completions | In-editor completion popup with optional auto-import edits |
+| Signature help | Parameter hints while you type a function call |
+| Code actions | Quickfixes, refactors, and source actions (e.g. organise imports) |
+| Goto definition | Jump to the definition of a symbol |
+| Goto declaration | Jump to the declaration of a symbol |
+| Goto implementation | Jump to the implementation of a symbol |
+| Find references | List all references to a symbol |
+| Rename | Rename a symbol across the workspace |
+| Format on save | Request `textDocument/formatting` from the server on save |
+
+Inlay hints are not currently implemented.
+
+## How servers are started
+
+Vorto spawns each language server lazily — the first time you open a buffer whose language has a configured server, Vorto starts that server in the background and performs the LSP `initialize` handshake. The server process is kept alive for the duration of the editor session and shut down gracefully when Vorto exits. If a language has multiple servers configured (for example, TypeScript has both `vtsls` and `typescript-language-server`), Vorto attempts to start each one and silently skips any whose binary is not found on `PATH`.
+
+<Warning>
+  Language server binaries are **not** bundled with Vorto. You must install each server separately and ensure its binary is available on your `PATH` before Vorto can use it.
+</Warning>
+
+## Project root detection
+
+When starting a language server, Vorto must tell it where the workspace root is. Vorto walks up the directory tree from the opened file and stops at the first directory that contains one of the server's configured root markers. If no marker is found, the directory of the opened file is used as the root.
+
+The root markers for each built-in server are:
+
+| Server | Root markers |
+|--------|-------------|
+| `rust-analyzer` | `Cargo.toml`, `rust-project.json` |
+| `pyright` | `pyproject.toml`, `setup.py`, `setup.cfg`, `requirements.txt` |
+| `gopls` | `go.mod`, `go.work` |
+| `vtsls` | `package.json`, `tsconfig.json` |
+| `typescript-language-server` | `package.json`, `tsconfig.json`, `jsconfig.json` |
+| `kotlin-lsp` | `settings.gradle.kts`, `settings.gradle`, `build.gradle.kts`, `build.gradle`, `pom.xml` |
+| `clangd` | `compile_commands.json`, `.clangd`, `Makefile`, `CMakeLists.txt` |
+| `jdtls` | `pom.xml`, `build.gradle`, `build.gradle.kts`, `.project` |
+| `marksman` | `.marksman.toml` |
+| `lua-language-server` | `.luarc.json`, `.luarc.jsonc`, `stylua.toml` |
+| `ruby-lsp` | `Gemfile`, `.rubocop.yml` |
+| `zls` | `build.zig` |
+| `taplo` | *(none — uses file directory)* |
+| `bash-language-server` | *(none — uses file directory)* |
+| `vscode-json-language-server` | *(none — uses file directory)* |
+| `yaml-language-server` | *(none — uses file directory)* |
+| `vscode-html-language-server` | *(none — uses file directory)* |
+| `vscode-css-language-server` | *(none — uses file directory)* |
+
+## Built-in LSP servers
+
+Vorto ships with default configurations for the following language servers. Each entry corresponds to a `[lsp.<name>]` block that is active without any configuration on your part.
+
+| Server | Language(s) | Binary |
+|--------|-------------|--------|
+| `rust-analyzer` | Rust | `rust-analyzer` |
+| `pyright` | Python | `pyright-langserver --stdio` |
+| `gopls` | Go | `gopls` |
+| `vtsls` | TypeScript, TSX | `vtsls --stdio` |
+| `typescript-language-server` | TypeScript, TSX, JavaScript | `typescript-language-server --stdio` |
+| `clangd` | C, C++ | `clangd` |
+| `jdtls` | Java | `jdtls` |
+| `kotlin-lsp` | Kotlin | `kotlin-lsp --stdio` |
+| `taplo` | TOML | `taplo lsp stdio` |
+| `bash-language-server` | Bash | `bash-language-server start` |
+| `vscode-json-language-server` | JSON | `vscode-json-language-server --stdio` |
+| `yaml-language-server` | YAML | `yaml-language-server --stdio` |
+| `marksman` | Markdown | `marksman server` |
+| `vscode-html-language-server` | HTML | `vscode-html-language-server --stdio` |
+| `vscode-css-language-server` | CSS | `vscode-css-language-server --stdio` |
+| `lua-language-server` | Lua | `lua-language-server` |
+| `ruby-lsp` | Ruby | `ruby-lsp` |
+| `zls` | Zig | `zls` |
+
+## Configuring custom LSP servers
+
+You can override any built-in server's settings or add entirely new servers in `~/.config/vorto/config.toml` using `[lsp.<name>]` blocks.
+
+```toml
+# Override an existing server's settings
+[lsp.rust-analyzer]
+command = "rust-analyzer"
+root_markers = ["Cargo.toml"]
+
+# Add a new server not in Vorto's built-in list
+[lsp.my-custom-server]
+command = "my-lsp"
+args = ["--stdio"]
+root_markers = ["my-project.json"]
+```
+
+Then associate the server with a language in `[languages.<name>]`:
+
+```toml
+[languages.mylang]
+extensions = ["mylang"]
+lsp = ["my-custom-server"]
+```
+
+<Note>
+  If you redeclare `[lsp.<name>]` for a built-in server, your values are merged on top of the defaults. You only need to specify the fields you want to change.
+</Note>

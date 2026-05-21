@@ -1,0 +1,103 @@
+---
+title: "Built-in language support in Vorto: extensions and servers"
+description: "A reference of every language Vorto supports by default — file extensions, tree-sitter grammar recipe, built-in LSP server, and default formatter."
+---
+
+Vorto ships with built-in definitions for 21 languages. Each definition covers the file extensions that map to the language, which LSP server to use, and any default formatter. Tree-sitter grammar recipes are included for all languages except SQL, which has a recipe but no bundled query files. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
+
+## Built-in language table
+
+| Language | Extensions | Grammar recipe | Built-in LSP server | Default formatter |
+|----------|-----------|---------------|---------------------|-------------------|
+| Rust | `.rs` | `rust` | `rust-analyzer` | `rustfmt` |
+| Python | `.py` | `python` | `pyright` | — |
+| Go | `.go` | `go` | `gopls` | `gofmt` |
+| JavaScript | `.js`, `.jsx`, `.mjs`, `.cjs` | `javascript` | `typescript-language-server` | — |
+| TypeScript | `.ts` | `typescript` | `vtsls`, `typescript-language-server` | — |
+| TSX | `.tsx` | `tsx` | `vtsls`, `typescript-language-server` | — |
+| TOML | `.toml` | `toml` | `taplo` | — |
+| Kotlin | `.kt`, `.kts` | `kotlin` | `kotlin-lsp` | — |
+| C | `.c`, `.h` | `c` | `clangd` | — |
+| C++ | `.cpp`, `.cc`, `.cxx`, `.hpp`, `.hh`, `.hxx` | `cpp` | `clangd` | — |
+| Java | `.java` | `java` | `jdtls` | — |
+| Bash | `.sh`, `.bash` | `bash` | `bash-language-server` | — |
+| JSON | `.json` | `json` | `vscode-json-language-server` | — |
+| YAML | `.yaml`, `.yml` | `yaml` | `yaml-language-server` | — |
+| Markdown | `.md`, `.markdown` | `markdown` | `marksman` | — |
+| HTML | `.html`, `.htm` | `html` | `vscode-html-language-server` | — |
+| CSS | `.css` | `css` | `vscode-css-language-server` | — |
+| Lua | `.lua` | `lua` | `lua-language-server` | — |
+| Ruby | `.rb` | `ruby` | `ruby-lsp` | — |
+| SQL | `.sql` | `sql` | — | — |
+| Zig | `.zig`, `.zon` | `zig` | `zls` | `zig fmt --stdin` |
+
+## Notes on specific languages
+
+**TypeScript and TSX** each have a separate language entry so that the JSX-aware `tsx` grammar and its queries are used for `.tsx` files. Both languages try `vtsls` first and fall back to `typescript-language-server`; whichever binary is found on `PATH` is used. Configure `lsp = [...]` in `[languages.typescript]` if you want to restrict to a single server.
+
+**C and C++** both use `clangd`. `.h` files are routed to C by default; C++-specific headers (`.hpp`, `.hh`, `.hxx`) are routed to C++.
+
+**JavaScript** includes `.jsx`, `.mjs`, and `.cjs` extensions in addition to `.js`.
+
+**Markdown** installs only the block-level grammar from `tree-sitter-grammars/tree-sitter-markdown`. The inline grammar requires injection support that is not yet implemented.
+
+**SQL** has a built-in grammar recipe and can be installed with `vorto grammar install sql`, but has no built-in LSP server.
+
+**Go** uses tab indentation by default, matching `gofmt` output.
+
+## Installing grammars and LSP servers
+
+Grammar recipes and LSP server configurations are independent. You need to install both separately:
+
+<Steps>
+  <Step title="Install the tree-sitter grammar">
+    ```bash
+    vorto grammar install rust
+    ```
+    This builds the shared library and writes query files to `~/.config/vorto/`. See [Installing tree-sitter grammars](/languages/grammars) for full details.
+  </Step>
+  <Step title="Install the LSP server binary">
+    Install the server binary through your system's package manager or language toolchain. For example:
+    ```bash
+    # Rust
+    rustup component add rust-analyzer
+
+    # Python
+    pip install pyright
+
+    # Go
+    go install golang.org/x/tools/gopls@latest
+
+    # Zig
+    # Download zls from https://github.com/zigtools/zls/releases
+    ```
+    The binary must be on your `PATH` when you start Vorto.
+  </Step>
+</Steps>
+
+## Adding custom languages
+
+You can add support for languages not listed here by declaring a `[languages.<name>]` block in `~/.config/vorto/config.toml`:
+
+```toml
+[languages.mylang]
+extensions = ["mlg"]
+comment_token = "//"
+lsp = ["my-lsp-server"]
+
+[lsp.my-lsp-server]
+command = "my-lsp"
+args = ["--stdio"]
+root_markers = ["myproject.json"]
+```
+
+You can also override any field for a built-in language. For example, to add an extra extension to Rust:
+
+```toml
+[languages.rust]
+extensions = ["rs", "rlib"]
+```
+
+<Note>
+  LSP server binaries are never bundled with Vorto. You must install them separately and ensure they are available on your `PATH`.
+</Note>

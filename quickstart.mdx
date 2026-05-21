@@ -1,0 +1,109 @@
+---
+title: "Vorto quick start: open a file and make your first edit"
+description: "Open a file or directory, navigate in Normal mode, make your first edit, save your work, and install a tree-sitter grammar to enable syntax highlighting."
+---
+
+This page walks you through the essential workflow in Vorto: opening a file, moving around in Normal mode, switching to Insert mode to type, saving your changes, and installing a grammar for syntax highlighting. By the end you will have everything you need for everyday editing.
+
+## Open a file or directory
+
+Pass a file path to open it directly, or pass a directory to launch the fuzzy file picker:
+
+```bash
+vorto myfile.rs
+```
+
+```bash
+vorto .
+```
+
+When you open a directory, Vorto sets it as the workspace root and immediately opens the fuzzy file picker so you can navigate to the file you want.
+
+## Navigate in Normal mode
+
+Vorto starts in **Normal mode**. Use the following keys to move around without touching the mouse:
+
+| Key | Action |
+|-----|--------|
+| `h` | Move left one character |
+| `j` | Move down one line |
+| `k` | Move up one line |
+| `l` | Move right one character |
+
+<Tip>
+  Normal mode is the hub you return to between every action. Get comfortable pressing `Esc` to come back here whenever you are unsure of your current mode.
+</Tip>
+
+## Edit text
+
+<Steps>
+  <Step title="Enter Insert mode">
+    Press `i` to enter Insert mode. You can now type freely. The cursor changes shape to indicate the active mode.
+  </Step>
+  <Step title="Type your changes">
+    Edit the file as you would in any text editor. Use `Backspace` to delete characters.
+  </Step>
+  <Step title="Return to Normal mode">
+    Press `Esc` to return to Normal mode when you are done typing.
+  </Step>
+</Steps>
+
+## Save and quit
+
+From Normal mode, type `:` to enter Command mode. Then:
+
+| Command | Action |
+|---------|--------|
+| `:w` | Save the current file |
+| `:q` | Quit Vorto |
+| `:wq` | Save and quit |
+
+<Warning>
+  Vorto will not let you quit with unsaved changes. Run `:w` before `:q`, or use `:q!` to discard changes and force quit.
+</Warning>
+
+## Install a grammar for syntax highlighting
+
+Vorto does not bundle compiled grammar libraries. Install the one for your language before you open that file type:
+
+```bash
+vorto grammar install rust
+```
+
+You can install multiple grammars at once, or install everything available:
+
+```bash
+vorto grammar install rust python typescript
+vorto grammar install --all
+```
+
+To see which grammars are available and which are already installed, run:
+
+```bash
+vorto grammar list
+```
+
+## Use the fuzzy finder
+
+Inside the editor, the fuzzy finder lets you quickly open files, switch buffers, and jump to symbols. Open it from Normal mode with the file picker prompt (the same one that appears when you run `vorto .`).
+
+<Note>
+  The fuzzy finder searches files relative to the workspace root — the directory you passed when launching Vorto, or your working directory if you opened a file directly.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Editing modes" icon="keyboard" href="/editing/modes">
+    Learn Visual mode, operator commands, and the full range of Normal-mode motions.
+  </Card>
+  <Card title="Language grammars" icon="tree" href="/languages/grammars">
+    Browse built-in grammar recipes and manage installed grammars.
+  </Card>
+  <Card title="LSP client" icon="plug" href="/languages/lsp">
+    Connect a language server for completions, diagnostics, and goto definition.
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/configuration/overview">
+    Customize your keybindings, theme, and per-language settings in TOML.
+  </Card>
+</CardGroup>

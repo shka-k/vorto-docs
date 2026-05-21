@@ -1,0 +1,73 @@
+---
+title: "Vorto editing modes: Normal, Insert, Visual, and more"
+description: Learn how Vorto's five editing modes work — Normal, Insert, Visual, V-LINE, and V-BLOCK — and how to switch between them while editing files.
+---
+
+Vorto is a modal editor: every key you press is interpreted differently depending on which mode is active. Rather than holding modifier keys to issue commands, you switch between dedicated modes for navigating, inserting text, and selecting regions. The current mode is always shown in the status bar at the bottom of the screen.
+
+## The five modes
+
+### Normal
+
+Normal is the default mode you land in when you open a file. In Normal mode every key is a command — you navigate, delete, yank, and transform text without typing characters into the buffer. Return to Normal from any other mode by pressing `Esc`.
+
+The status bar shows **NORMAL** when this mode is active.
+
+### Insert
+
+Insert mode lets you type text directly into the buffer. Characters you press are inserted at the cursor position. Press `Esc` to return to Normal mode and stop inserting.
+
+The status bar shows **INSERT** when this mode is active.
+
+You can enter Insert mode from Normal mode in several ways:
+
+| Key | Entry point |
+|-----|-------------|
+| `i` | Insert before the cursor |
+| `a` | Append after the cursor |
+| `I` | Insert at the first non-blank character of the line |
+| `A` | Append at the end of the line |
+| `o` | Open a new line below and enter Insert |
+| `O` | Open a new line above and enter Insert |
+| `s` | Delete the character under the cursor and enter Insert |
+| `S` | Clear the current line and enter Insert |
+| `c{motion}` | Delete over a motion and enter Insert |
+| `C` | Delete from the cursor to end of line and enter Insert |
+
+### Visual
+
+Visual mode lets you select a contiguous region of characters. The selection anchors at the cursor position where you entered the mode and extends as you move. Operators like `d` (delete) and `y` (yank) then act on the selected region.
+
+The status bar shows **VISUAL** when this mode is active.
+
+Press `v` in Normal mode to enter Visual mode. Press `Esc` to return to Normal.
+
+### Visual Line (V-LINE)
+
+Visual Line mode selects whole lines at a time. The selection always covers complete lines from the anchor to the cursor, regardless of the cursor column. This is useful for yanking, deleting, or indenting entire lines.
+
+The status bar shows **V-LINE** when this mode is active.
+
+Press `V` (uppercase) in Normal mode to enter Visual Line mode. Press `Esc` to return to Normal.
+
+### Visual Block (V-BLOCK)
+
+Visual Block mode selects a rectangular column of characters across multiple lines. This is useful for inserting or deleting a column of text in structured data or aligned code.
+
+The status bar shows **V-BLOCK** when this mode is active.
+
+Press `Ctrl-V` in Normal mode to enter Visual Block mode. Press `Esc` to return to Normal.
+
+## Returning to Normal mode
+
+Press `Esc` from any mode to return to Normal. This is the universal escape hatch — if you are ever unsure which mode you are in, press `Esc` and the status bar will confirm **NORMAL**.
+
+## Mode summary
+
+| Mode | Status bar | Enter from Normal | Purpose |
+|------|------------|-------------------|---------|
+| Normal | `NORMAL` | `Esc` (from any mode) | Navigate and issue commands |
+| Insert | `INSERT` | `i`, `a`, `I`, `A`, `o`, `O`, `s`, `S`, `c` | Type text into the buffer |
+| Visual | `VISUAL` | `v` | Select a character region |
+| Visual Line | `V-LINE` | `V` | Select whole lines |
+| Visual Block | `V-BLOCK` | `Ctrl-V` | Select a rectangular column |

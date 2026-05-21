@@ -1,0 +1,145 @@
+---
+title: How to set up Language Server Protocol support in Vorto
+description: Install an LSP server binary, install the matching tree-sitter grammar, and verify that diagnostics, hover, completions, and code actions are active.
+---
+
+Vorto acts as an LSP client: it spawns language server processes automatically when you open a file of a supported type and the server binary is present on your `PATH`. All you need to do is install the server once, install the tree-sitter grammar, and open a file — Vorto handles the rest.
+
+## Rust (rust-analyzer)
+
+Rust is a good reference case because the toolchain provides its own LSP server.
+
+<Steps>
+  <Step title="Install rust-analyzer">
+    Add the component through `rustup`:
+
+    ```sh
+    rustup component add rust-analyzer
+    ```
+
+    Alternatively, download a pre-built binary from the rust-analyzer releases page and place it somewhere on your `PATH`.
+  </Step>
+
+  <Step title="Install the Rust tree-sitter grammar">
+    Syntax highlighting and smart indentation require the compiled grammar:
+
+    ```sh
+    vorto grammar install rust
+    ```
+
+    <Note>
+      A C compiler is required to build grammars. Run `vorto grammar list` to check whether the grammar is already installed.
+    </Note>
+  </Step>
+
+  <Step title="Open a Rust file">
+    Open any `.rs` file inside a Cargo workspace:
+
+    ```sh
+    vorto src/main.rs
+    ```
+
+    Vorto detects `Cargo.toml` (or `rust-project.json`) as the workspace root marker and starts `rust-analyzer` automatically. LSP servers are started lazily — the server process spawns the first time you open a file of the right type.
+  </Step>
+
+  <Step title="Use LSP features">
+    Once the server is running, the following features become available:
+
+    | Feature | How to access |
+    |---------|--------------|
+    | Diagnostics | Shown in the gutter and inline as you type |
+    | Hover documentation | Press `K` in Normal mode over a symbol |
+    | Completions | Appear automatically in Insert mode |
+    | Code actions | Available in Normal mode when the cursor is on a diagnostic |
+    | Go to definition | Navigate to a symbol's definition |
+  </Step>
+
+  <Step title="Check LSP status">
+    Run the `:lsp` command from Command mode to see which servers are connected and their current state:
+
+    ```
+    :lsp
+    ```
+  </Step>
+</Steps>
+
+## JavaScript and TypeScript (vtsls / typescript-language-server)
+
+Vorto's built-in configuration lists both `vtsls` and `typescript-language-server` for TypeScript and JavaScript files. Whichever binary is on your `PATH` will start; the other is silently skipped.
+
+<Steps>
+  <Step title="Install a TypeScript language server">
+    Install `vtsls` globally via npm:
+
+    ```sh
+    npm install -g @vtsls/language-server
+    ```
+
+    Or use the classic TypeScript language server:
+
+    ```sh
+    npm install -g typescript-language-server typescript
+    ```
+  </Step>
+
+  <Step title="Install the grammar">
+    <CodeGroup>
+
+    ```sh TypeScript
+    vorto grammar install typescript
+    ```
+
+    ```sh TSX
+    vorto grammar install tsx
+    ```
+
+    ```sh JavaScript
+    vorto grammar install javascript
+    ```
+
+    </CodeGroup>
+  </Step>
+
+  <Step title="Open a file in a project with root markers">
+    The TypeScript servers use `package.json`, `tsconfig.json`, or `jsconfig.json` as root markers. Open a file from inside such a project:
+
+    ```sh
+    vorto src/index.ts
+    ```
+
+    Vorto detects the root marker and starts the server automatically.
+  </Step>
+</Steps>
+
+## Override LSP arguments
+
+If you need to pass custom flags to a built-in server, add a `[lsp.<server-name>]` block to your `config.toml`. Only the fields you set are changed — the rest of the built-in definition stays in place:
+
+```toml
+[lsp.rust-analyzer]
+args = ["--some-flag"]
+```
+
+```toml
+[lsp.vtsls]
+args = ["--stdio", "--my-flag"]
+```
+
+<Tip>
+  To restrict TypeScript files to a single server instead of trying both, re-declare the `lsp` list on the language:
+
+  ```toml
+  [languages.typescript]
+  lsp = ["vtsls"]
+  ```
+</Tip>
+
+## Troubleshooting
+
+**The server does not start.**
+Confirm the server binary is on your `PATH` by running it directly in a terminal (e.g., `rust-analyzer --version`). Also verify that the project contains the expected root marker file (`Cargo.toml`, `package.json`, etc.) — without a root marker the server may not start.
+
+**`:lsp` shows no connected servers.**
+LSP servers start lazily when you open a file of the matching type. Make sure you have actually opened a file, not just launched Vorto to a directory.
+
+For more troubleshooting steps, see the [Troubleshooting guide](/guides/troubleshooting).

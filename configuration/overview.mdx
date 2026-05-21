@@ -1,0 +1,85 @@
+---
+title: "Vorto configuration overview: config.toml and file locations"
+description: "Learn where Vorto looks for its config file, how workspace-local .vorto config works, and how the top-level TOML sections fit together."
+---
+
+Vorto reads a single TOML file at startup and merges it onto its built-in defaults. You don't need to create the file to use Vorto — every setting has a sensible default — but the file is your primary way to tune editor behavior, cursor shapes, keybindings, language settings, and LSP servers.
+
+## Config file location
+
+The global config file lives at:
+
+```
+$XDG_CONFIG_HOME/vorto/config.toml
+```
+
+When `$XDG_CONFIG_HOME` is not set, Vorto falls back to `~/.config/vorto/config.toml`.
+
+### Workspace-local config
+
+You can add a project-local config that overrides your global settings for that directory. Vorto checks the current working directory for two layouts:
+
+| Path | Description |
+|---|---|
+| `.vorto/config.toml` | Directory form — mirrors the global `~/.config/vorto/` layout |
+| `.vorto` | Single TOML file — simpler alternative |
+
+Workspace-local config takes full precedence over the global config. Only one config file is active at a time.
+
+## Config directory structure
+
+```
+~/.config/vorto/
+├── config.toml       # editor settings, keybindings, language overrides
+├── grammars/         # installed tree-sitter .so / .dylib / .dll libraries
+└── queries/
+    └── <lang>/       # highlights.scm, indents.scm, etc. per language
+```
+
+The `grammars/` and `queries/` directories can be overridden with `grammar_dir` and `query_dir` keys at the top level of `config.toml`.
+
+## Top-level TOML sections
+
+| Section | Purpose |
+|---|---|
+| `[editor]` | Global editor settings (indent width, whitespace rendering, etc.) |
+| `[cursor]` | Cursor shape and blinking per mode |
+| `[[bind]]` | Custom keybindings — each entry maps a key sequence to an action |
+| `[languages.<name>]` | Per-language overrides for editor settings, grammar, LSP, and formatter |
+| `[lsp.<name>]` | LSP server definitions — override built-ins or add new servers |
+
+## Minimal complete example
+
+```toml
+[editor]
+indent_width = 2
+tab_width = 4
+format_on_save = true
+
+[cursor]
+normal = "block"
+insert = "bar"
+blinking = false
+
+[[bind]]
+keys = "<C-s>"
+action = "save"
+
+[[bind]]
+keys = "<space>w"
+action = "save"
+
+[languages.rust]
+indent_width = 4
+tab_width = 4
+
+[lsp.rust-analyzer]
+args = ["--log-file", "/tmp/ra.log"]
+```
+
+## Further reading
+
+- [Editor settings](/configuration/editor-settings) — full reference for `[editor]` and `[cursor]`
+- [Keybindings](/configuration/keybindings) — key notation, action names, and `[[bind]]` syntax
+- [Per-language settings](/configuration/languages) — `[languages.<name>]` table fields
+- [LSP servers](/configuration/lsp-servers) — `[lsp.<name>]` table fields and built-in server list

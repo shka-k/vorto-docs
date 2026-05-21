@@ -1,0 +1,148 @@
+---
+title: "Customize Vorto keybindings with [[bind]] in config.toml"
+description: "How to write [[bind]] entries in config.toml — the key notation Vorto accepts, every valid action name, and both TOML syntax forms."
+---
+
+Vorto ships with vim-style default bindings and lets you override or extend them through `[[bind]]` entries in `config.toml`. Each entry maps a key sequence to a named action. New bindings layer on top of the defaults — you only need to list the keys you want to change.
+
+## `[[bind]]` entry fields
+
+Each `[[bind]]` entry has two required fields:
+
+| Field | Type | Description |
+|---|---|---|
+| `keys` | string | Vim-style key sequence (see notation below) |
+| `action` | string | Named action to perform (see action list below) |
+
+## Key notation
+
+Vorto parses key sequences in vim notation. Each token is either a single character or a named key in angle brackets:
+
+| Notation | Description |
+|---|---|
+| `a` | Bare character `a` |
+| `<C-s>` | Ctrl+s |
+| `<A-x>` | Alt+x (also `<M-x>` for Meta) |
+| `<S-x>` | Shift+x |
+| `<C-S-x>` | Ctrl+Shift+x |
+| `<space>` | Space bar |
+| `<esc>` | Escape key |
+| `<cr>` | Enter / Return (also `<enter>` or `<return>`) |
+| `<bs>` | Backspace |
+| `<tab>` | Tab key |
+| `<left>`, `<right>`, `<up>`, `<down>` | Arrow keys |
+| `<home>`, `<end>` | Home / End keys |
+
+Modifier prefixes are case-insensitive and dash-separated: `<C-s>` and `<c-s>` are equivalent.
+
+## Binding contexts
+
+The key sequence determines which binding context the action is installed in:
+
+- **Single key** (e.g. `<C-s>`, `u`, `G`) — installed in the **Initial** context, active as soon as a key is pressed in Normal mode.
+- **Leader sequence** (e.g. `<space>w`, `<space>f`) — installed in the **Leader** context, active after pressing Space.
+
+Only single-key and `<space>X` two-key sequences are supported. Sequences of three or more keys, or two-key sequences that don't start with `<space>`, are not valid in the current version.
+
+## Valid action names
+
+| Action | Description |
+|---|---|
+| **Motions** | |
+| `left` | Move cursor left |
+| `right` | Move cursor right |
+| `up` | Move cursor up |
+| `down` | Move cursor down |
+| `line-start` | Move to start of line |
+| `line-end` | Move to end of line |
+| `word-forward` | Move forward one word |
+| `word-back` | Move back one word |
+| `file-start` | Move to start of file |
+| `file-end` | Move to end of file |
+| `search-next` | Jump to next search match |
+| `search-prev` | Jump to previous search match |
+| **Direct commands** | |
+| `save` | Save the current buffer |
+| `open` | Open a file |
+| `quit` | Quit (prompts if unsaved) |
+| `quit-force` | Quit without saving |
+| `save-and-quit` | Save then quit |
+| `goto-line` | Jump to a specific line number |
+| `enter-insert` | Enter Insert mode |
+| `enter-normal` | Enter Normal mode |
+| `enter-visual` | Enter Visual mode |
+| `enter-visual-line` | Enter Visual Line mode |
+| `enter-visual-block` | Enter Visual Block mode |
+| `open-line-below` | Open a new line below and enter Insert mode |
+| `open-line-above` | Open a new line above and enter Insert mode |
+| `paste` | Paste from the yank register |
+| `undo` | Undo last change |
+| `redo` | Redo last undone change |
+| `delete-char` | Delete character under the cursor |
+| `command-prompt` | Open the command prompt |
+| `search-forward` | Open the forward search prompt |
+| `search-backward` | Open the backward search prompt |
+| `fuzzy-files` | Open fuzzy file finder |
+| `fuzzy-files-hidden` | Open fuzzy file finder including hidden files |
+| `fuzzy-lines` | Open fuzzy line search |
+| `fuzzy-workspace` | Open fuzzy workspace search |
+| `select-whole-buffer` | Select the entire buffer |
+| **Operators** | |
+| `delete-operator` | Delete motion/object |
+| `yank-operator` | Yank motion/object |
+| `change-operator` | Change motion/object |
+| **Prefix transitions** | |
+| `leader` | Enter the Leader prefix context |
+| `goto-prefix` | Enter the Goto prefix context |
+
+## TOML syntax forms
+
+### Table-array form
+
+Use one `[[bind]]` block per entry. This is the most readable form for a small number of custom bindings:
+
+```toml
+[[bind]]
+keys = "<C-s>"
+action = "save"
+
+[[bind]]
+keys = "<space>w"
+action = "save"
+
+[[bind]]
+keys = "<space>f"
+action = "fuzzy-files"
+
+[[bind]]
+keys = "<space>F"
+action = "fuzzy-files-hidden"
+```
+
+### Inline array form
+
+Use a single `bind` key with an inline array of objects. Convenient when you want to group all your bindings in one place:
+
+```toml
+bind = [
+  { keys = "<C-s>",      action = "save" },
+  { keys = "<space>w",   action = "save" },
+  { keys = "<space>f",   action = "fuzzy-files" },
+  { keys = "<space>F",   action = "fuzzy-files-hidden" },
+  { keys = "<space>l",   action = "fuzzy-lines" },
+]
+```
+
+Both forms are equivalent — choose whichever suits your style. You cannot mix them in the same file.
+
+## Overriding existing bindings
+
+A new `[[bind]]` entry for a key that already has a default binding replaces the default. For example, to remap `u` from Undo to Quit:
+
+```toml
+[[bind]]
+keys = "u"
+action = "quit"
+```
+
+The original `u` → Undo binding is discarded. All other defaults remain intact.

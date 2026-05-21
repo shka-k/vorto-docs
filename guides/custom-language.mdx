@@ -1,0 +1,138 @@
+---
+title: How to add and configure a custom language in Vorto
+description: Configure a language that isn't built in, wire up a tree-sitter grammar and LSP server, set a formatter, and override built-in language defaults.
+---
+
+Vorto's language system is fully open: anything you can express in the built-in language table you can also define or override in your `config.toml`. You add a `[languages.<name>]` block for the language definition and, if it needs an LSP server, a matching `[lsp.<server-name>]` block. Vorto merges your entries onto the built-in defaults at startup, so a partial block changes only the fields you specify.
+
+## Add a new language
+
+The minimal definition for a language that isn't already built in is a name, a list of file extensions, and optionally a comment token:
+
+```toml
+[languages.fish]
+extensions = ["fish"]
+comment_token = "#"
+```
+
+With just this, Vorto will recognise `.fish` files and enable comment toggling. Add more fields as needed.
+
+## Full example: Fish shell
+
+The following block configures Fish shell with a tree-sitter grammar, a custom LSP server, and a non-default indent width:
+
+```toml
+[languages.fish]
+extensions = ["fish"]
+comment_token = "#"
+indent_width = 4
+lsp = ["fish-lsp"]
+
+[lsp.fish-lsp]
+command = "fish-lsp"
+args = ["--stdio"]
+root_markers = [".git"]
+```
+
+<Steps>
+  <Step title="Define the language block">
+    Add a `[languages.<name>]` section to `~/.config/vorto/config.toml`. Set `extensions` to the file extensions that should trigger this language, and `comment_token` to the single-line comment prefix:
+
+    ```toml
+    [languages.fish]
+    extensions = ["fish"]
+    comment_token = "#"
+    indent_width = 4
+    ```
+
+    Per-language editor settings (`indent_width`, `tab_width`, `use_tabs`, etc.) go directly in the language block — they are not nested under a sub-table.
+  </Step>
+
+  <Step title="Reference a tree-sitter grammar">
+    By default Vorto looks for a grammar whose filename stem matches the language name. If the grammar has a different name, set it explicitly:
+
+    ```toml
+    [languages.fish]
+    extensions = ["fish"]
+    grammar = "fish-shell"
+    ```
+
+    Install the grammar before opening files of this type:
+
+    ```sh
+    vorto grammar install fish-shell
+    ```
+
+    <Note>
+      Custom grammars must be installed manually. Only the languages listed in `vorto grammar list` have built-in recipes; for anything else you'll need to build the grammar library yourself and place it in the grammar directory (shown in the output of `vorto grammar list`).
+    </Note>
+  </Step>
+
+  <Step title="Define the LSP server">
+    If your language has an LSP server, define it in a `[lsp.<server-name>]` block. `command` is required for any server that isn't already built in:
+
+    ```toml
+    [lsp.fish-lsp]
+    command = "fish-lsp"
+    args = ["--stdio"]
+    root_markers = [".git"]
+    ```
+
+    `root_markers` is a list of filenames that Vorto looks for when walking up the directory tree to find the workspace root. The server starts when any of these files is found.
+  </Step>
+
+  <Step title="Attach the server to the language">
+    Set the `lsp` field on the language block to a list of server names. The names must match keys in the `[lsp]` table:
+
+    ```toml
+    [languages.fish]
+    extensions = ["fish"]
+    comment_token = "#"
+    indent_width = 4
+    lsp = ["fish-lsp"]
+    ```
+  </Step>
+
+  <Step title="Configure a formatter (optional)">
+    Set `formatter` to run an external command on save. The buffer's text is piped on stdin and the command's stdout replaces the buffer:
+
+    ```toml
+    [languages.fish]
+    extensions = ["fish"]
+    comment_token = "#"
+    formatter = { command = "fish_indent", args = [] }
+    ```
+
+    When `formatter` is set, it takes precedence over `textDocument/formatting` from the LSP.
+  </Step>
+</Steps>
+
+## Override a built-in language
+
+You don't need to re-state every field to change a built-in language — only the fields you include are changed. For example, to swap Python's formatter from the default (none) to `black`:
+
+```toml
+[languages.python]
+formatter = { command = "black", args = ["-"] }
+```
+
+To change only the indent width for Go without touching anything else:
+
+```toml
+[languages.go]
+indent_width = 4
+tab_width = 4
+```
+
+<Warning>
+  The `lsp` field is replaced whole, not merged. If you set `lsp = ["my-server"]` on a built-in language, the built-in servers for that language are dropped. Re-state any built-in server names you still want:
+
+  ```toml
+  [languages.python]
+  lsp = ["pyright", "my-extra-server"]
+  ```
+</Warning>
+
+## Workspace-local config
+
+Place a `.vorto` file (or a `.vorto/config.toml` directory form) at your project root to apply language overrides only within that project. The workspace config takes precedence over `~/.config/vorto/config.toml`. This is useful for project-specific formatters or indent settings without affecting your global config.

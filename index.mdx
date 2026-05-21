@@ -1,0 +1,72 @@
+---
+title: "Vorto: modal terminal editor with LSP and tree-sitter"
+description: "Vorto is a fast, keyboard-driven terminal text editor with modal editing, tree-sitter syntax highlighting, and built-in Language Server Protocol support."
+---
+
+Vorto is a modal terminal text editor written in Rust, built for developers who want Vim-style keyboard-driven editing with modern features out of the box. It brings tree-sitter syntax highlighting and a full Language Server Protocol client — diagnostics, completions, hover, code actions, and goto definition — directly into the terminal.
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install Vorto from crates.io or build from source in minutes.
+  </Card>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Open your first file, navigate in Normal mode, and start editing.
+  </Card>
+  <Card title="Language Support" icon="code" href="/languages/grammars">
+    Install tree-sitter grammars and LSP servers for your languages.
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/configuration/overview">
+    Customize keybindings, themes, indentation, and language settings.
+  </Card>
+</CardGroup>
+
+## Get up and running
+
+<Steps>
+  <Step title="Install Vorto">
+    Install from crates.io with a single command:
+    ```bash
+    cargo install vorto
+    ```
+  </Step>
+  <Step title="Open a file or directory">
+    Launch Vorto with a file path or open a directory to start with the fuzzy file picker:
+    ```bash
+    vorto myfile.rs
+    # or open a project directory
+    vorto .
+    ```
+  </Step>
+  <Step title="Install language grammars">
+    Add syntax highlighting for your languages on demand:
+    ```bash
+    vorto grammar install rust python typescript
+    ```
+  </Step>
+  <Step title="Configure your editor">
+    Create `~/.config/vorto/config.toml` to set keybindings, themes, and language options.
+  </Step>
+</Steps>
+
+## Key features
+
+<CardGroup cols={2}>
+  <Card title="Modal editing" icon="keyboard" href="/editing/modes">
+    Normal, Insert, Visual, Visual-Line, and Visual-Block modes inspired by Vim.
+  </Card>
+  <Card title="Tree-sitter highlighting" icon="tree" href="/languages/grammars">
+    Precise, incremental syntax highlighting built from on-demand grammar installs.
+  </Card>
+  <Card title="LSP client" icon="plug" href="/languages/lsp">
+    Diagnostics, completions, hover docs, code actions, and goto definition.
+  </Card>
+  <Card title="Fuzzy finder" icon="magnifying-glass" href="/editing/commands">
+    Fast fuzzy search across files, open buffers, and symbols.
+  </Card>
+  <Card title="Customizable keymaps" icon="map" href="/configuration/keybindings">
+    Remap any key or add new bindings via TOML configuration.
+  </Card>
+  <Card title="Git integration" icon="code-branch" href="/guides/first-project">
+    VCS-aware gutter shows changed, added, and deleted lines at a glance.
+  </Card>
+</CardGroup>

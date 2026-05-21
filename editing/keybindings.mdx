@@ -1,0 +1,247 @@
+---
+title: "Vorto keybindings: complete default keymap reference"
+description: A complete reference of Vorto's default Normal-mode keybindings — navigation, editing, operators, Visual mode, leader keys, windows, and more.
+---
+
+Vorto ships with a vim-style keymap out of the box. Every binding listed here is active in Normal mode unless noted otherwise. You can override any binding in your `config.toml` using `[[bind]]` entries — see the configuration documentation for details.
+
+## Navigation
+
+### Cursor movement
+
+| Key | Action |
+|-----|--------|
+| `h` / `←` | Move left |
+| `l` / `→` | Move right |
+| `j` / `↓` | Move down |
+| `k` / `↑` | Move up |
+| `0` / `Home` | Move to the start of the line |
+| `$` / `End` | Move to the end of the line |
+| `^` | Move to the first non-blank character of the line |
+
+### Word movement
+
+| Key | Action |
+|-----|--------|
+| `w` | Move forward to the start of the next word |
+| `b` | Move backward to the start of the previous word |
+| `e` | Move forward to the end of the current or next word |
+| `W` | Move forward to the start of the next WORD (whitespace-delimited) |
+| `B` | Move backward to the start of the previous WORD |
+| `E` | Move forward to the end of the current or next WORD |
+
+### File and viewport movement
+
+| Key | Action |
+|-----|--------|
+| `gg` | Go to the start of the file |
+| `G` | Go to the end of the file |
+| `H` | Move to the top of the visible viewport |
+| `M` | Move to the middle of the visible viewport |
+| `L` | Move to the bottom of the visible viewport |
+| `Ctrl-d` | Scroll half a page down |
+| `Ctrl-u` | Scroll half a page up |
+| `Ctrl-f` | Scroll a full page down |
+| `Ctrl-b` | Scroll a full page up |
+| `{` | Move to the previous blank line (paragraph back) |
+| `}` | Move to the next blank line (paragraph forward) |
+| `%` | Jump to the matching bracket |
+
+### Character find
+
+| Key | Action |
+|-----|--------|
+| `f{c}` | Move forward to the next occurrence of character `c` on the line |
+| `F{c}` | Move backward to the previous occurrence of character `c` on the line |
+| `t{c}` | Move forward, stopping one character before `c` |
+| `T{c}` | Move backward, stopping one character after `c` |
+| `;` | Repeat the last character find in the same direction |
+| `,` | Repeat the last character find in the opposite direction |
+
+### Search
+
+| Key | Action |
+|-----|--------|
+| `/` | Open a forward search prompt |
+| `?` | Open a backward search prompt |
+| `n` | Jump to the next search match |
+| `N` | Jump to the previous search match |
+| `*` | Search forward for the word under the cursor |
+| `#` | Search backward for the word under the cursor |
+
+## Entering Insert mode
+
+| Key | Action |
+|-----|--------|
+| `i` | Insert before the cursor |
+| `a` | Append after the cursor |
+| `I` | Insert at the first non-blank character of the line |
+| `A` | Append at the end of the line |
+| `o` | Open a new line below and enter Insert |
+| `O` | Open a new line above and enter Insert |
+| `s` | Delete the character under the cursor and enter Insert |
+| `S` | Clear the current line and enter Insert |
+| `C` | Delete from the cursor to end of line and enter Insert |
+
+## Normal-mode editing
+
+### Operators
+
+Operators wait for a motion or text object before acting. Type the operator, then a motion (e.g. `dw` deletes a word) or double the operator to act on the current line (e.g. `dd`).
+
+| Key | Operator |
+|-----|----------|
+| `d` | Delete |
+| `y` | Yank (copy) |
+| `c` | Change (delete and enter Insert) |
+| `>` | Indent right |
+| `<` | Dedent left |
+
+### Standalone editing commands
+
+| Key | Action |
+|-----|--------|
+| `x` | Delete the character under the cursor |
+| `p` | Paste after the cursor |
+| `u` | Undo |
+| `Ctrl-r` | Redo (bind with action `redo` in config if not already set) |
+| `D` | Delete from the cursor to end of line |
+| `Y` | Yank the current line |
+| `J` | Join the next line into the current line |
+| `~` | Toggle the case of the character under the cursor |
+| `r{c}` | Replace the character under the cursor with `c` |
+| `.` | Repeat the last change |
+
+### Text objects
+
+Text objects are valid after an operator and require a scope (`i` for inner, `a` for around):
+
+| Object key | Target |
+|-----------|--------|
+| `w` | Word |
+| `p` | Paragraph |
+| `"` | Double-quoted string |
+| `'` | Single-quoted string |
+| `(` / `)` / `b` | Parentheses |
+| `{` / `}` / `B` | Braces |
+| `[` / `]` | Brackets |
+| `f` | Function (tree-sitter) |
+| `c` | Class (tree-sitter) |
+| `a` | Argument / parameter (tree-sitter) |
+
+Example: `diw` deletes the inner word; `ca"` changes around a double-quoted string.
+
+## Visual mode
+
+| Key | Action |
+|-----|--------|
+| `v` | Enter Visual (character) mode |
+| `V` | Enter Visual Line mode |
+| `Ctrl-V` | Enter Visual Block mode |
+| `Esc` | Return to Normal mode |
+
+In all Visual modes the same motions and text objects apply for extending the selection. Operators (`d`, `y`, `c`, `>`, `<`) act on the selection when pressed.
+
+## `g` prefix (goto bindings)
+
+Press `g` in Normal mode to enter the goto sub-context:
+
+| Key sequence | Action |
+|-------------|--------|
+| `gg` | Go to the start of the file |
+| `g_` | Move to the last non-blank character of the line |
+| `ge` | Move to the end of the previous word |
+| `gE` | Move to the end of the previous WORD |
+| `gs` | Move to the first non-blank character (same as `^`) |
+| `gl` | Move to the end of the line (same as `$`) |
+| `gc` | Move to the middle of the viewport (same as `M`) |
+| `gb` | Move to the bottom of the viewport (same as `L`) |
+| `gd` | Go to definition (LSP) |
+| `gD` | Go to declaration (LSP) |
+| `gi` | Go to implementation (LSP) |
+| `gr` | Find references (LSP) |
+| `gw` | Jump label (easymotion-style two-character hop) |
+| `gn` | Select the next search match and enter Visual mode |
+| `gN` | Select the previous search match and enter Visual mode |
+| `gA` | Select the whole buffer (equivalent to `ggVG`) |
+
+## `z` prefix (viewport scroll)
+
+| Key sequence | Action |
+|-------------|--------|
+| `zz` | Center the cursor's line in the viewport |
+| `zt` | Scroll so the cursor's line is at the top of the viewport |
+| `zb` | Scroll so the cursor's line is at the bottom of the viewport |
+
+## Leader key bindings (`Space`)
+
+The leader key is `Space`. Press `Space` in Normal mode, then the second key:
+
+| Key sequence | Action |
+|-------------|--------|
+| `Space f` | Open the fuzzy file picker (respects `.gitignore`, hides dotfiles) |
+| `Space F` | Open the fuzzy file picker including hidden/dotfile paths |
+| `Space l` | Fuzzy search lines in the current buffer |
+| `Space /` | Fuzzy search across all workspace files |
+| `Space b` | Open the buffer picker |
+| `Space d` | Open the diagnostics picker (current buffer) |
+| `Space D` | Open the diagnostics picker (entire workspace) |
+| `Space r` | Rename the symbol under the cursor (LSP) |
+| `Space a` | Show code actions at the cursor (LSP) |
+| `Space K` / `Space k` | Show hover documentation (LSP) |
+| `Space c` | Toggle a line comment |
+| `Space *` | Seed the search pattern from the word under the cursor (forward, keep position) |
+| `Space #` | Seed the search pattern from the word under the cursor (backward, keep position) |
+| `Space ,` | Clear all extra multi-cursors |
+| `Space w` | Enter the window sub-leader (see below) |
+
+## Window bindings
+
+### `Space w` sub-leader
+
+| Key sequence | Action |
+|-------------|--------|
+| `Space w v` | Split the pane to the right (vertical split) |
+| `Space w h` | Split the pane below (horizontal split) |
+| `Space w c` | Close the active pane |
+| `Space w o` | Cycle to the next pane |
+| `Space w ←` | Focus the pane to the left |
+| `Space w →` | Focus the pane to the right |
+| `Space w ↑` | Focus the pane above |
+| `Space w ↓` | Focus the pane below |
+
+### `Ctrl-W` prefix
+
+| Key sequence | Action |
+|-------------|--------|
+| `Ctrl-W h` / `←` | Focus the pane to the left |
+| `Ctrl-W l` / `→` | Focus the pane to the right |
+| `Ctrl-W j` / `↓` | Focus the pane below |
+| `Ctrl-W k` / `↑` | Focus the pane above |
+| `Ctrl-W w` | Cycle to the next pane |
+| `Ctrl-W v` | Split the pane to the right |
+| `Ctrl-W s` | Split the pane below |
+| `Ctrl-W c` / `q` | Close the active pane |
+
+## Bracket navigation (`]` and `[` prefixes)
+
+| Key sequence | Action |
+|-------------|--------|
+| `]d` | Jump to the next LSP diagnostic in the buffer |
+| `[d` | Jump to the previous LSP diagnostic in the buffer |
+
+## Multi-cursor
+
+| Key | Action |
+|-----|--------|
+| `+` | Add a cursor at the next occurrence of the word under the cursor |
+| `-` | Remove the most recently added extra cursor |
+| `Shift-↓` | Add a cursor on the line below (requires Kitty keyboard protocol) |
+| `Space ,` | Clear all extra cursors |
+
+## Other Normal-mode keys
+
+| Key | Action |
+|-----|--------|
+| `K` | Show hover documentation for the symbol under the cursor (LSP) |
+| `:` | Open the command prompt |

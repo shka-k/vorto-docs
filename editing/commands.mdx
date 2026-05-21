@@ -1,0 +1,121 @@
+---
+title: "Vorto command prompt and fuzzy finder pickers reference"
+description: "Reference for Vorto's command prompt (`:` commands for saving, quitting, buffers, and splits) and the fuzzy finder pickers for files, buffers, and diagnostics."
+---
+
+Vorto provides two complementary ways to perform higher-level actions without leaving the keyboard: the command-line prompt and the fuzzy finder. The command prompt lets you run named commands by typing them explicitly; the fuzzy finder opens interactive pickers that filter large lists as you type.
+
+## Command mode
+
+Press `:` in Normal mode to open the command prompt at the bottom of the screen. Type a command name and press `Enter` to run it, or press `Esc` to cancel.
+
+The prompt supports Tab completion for command names and, where applicable, for file paths. Press `Tab` to cycle forward through candidates and `Shift-Tab` to cycle backward.
+
+### File and session commands
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:w` | `:write` | Save the current buffer |
+| `:w <path>` | `:write <path>` | Save to a specific path |
+| `:w!` | `:write!` | Save, creating any missing parent directories |
+| `:q` | `:quit` | Quit |
+| `:q!` | `:quit!` | Force quit, discarding unsaved changes |
+| `:wq` | `:x` | Save and quit |
+| `:e <path>` | `:edit <path>` | Open a file |
+| `:reload` | `:e!` | Reload the current buffer from disk (undo restores the pre-reload state) |
+| `:reload-all` | | Reload every file-backed buffer from disk |
+| `:new` | `:enew` | Open a new scratch buffer |
+
+### Buffer management
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:bn` | `:bnext` | Switch to the next buffer |
+| `:bp` | `:bprev` | Switch to the previous buffer |
+| `:bd` | `:bdelete` | Delete (close) the current buffer; refuses if there are unsaved changes |
+| `:bd!` | `:bdelete!`, `:bc`, `:bc!` | Force-delete the current buffer, discarding unsaved changes |
+| `:bca` | `:bca!` | Force-delete every buffer and open a fresh scratch |
+| `:bls` | `:buffers` | Open the buffer picker |
+
+### Navigation
+
+| Command | Description |
+|---------|-------------|
+| `:goto <n>` | Jump to line `n` |
+
+### Window / split management
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:split` | `:sp`, `:nh` | Open a new pane below the active one |
+| `:vsplit` | `:vsp`, `:vs`, `:nv` | Open a new pane to the right |
+| `:close` | `:clo` | Close the active pane (refuses on the last remaining pane) |
+
+### Search
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:noh` | `:nohl`, `:nohlsearch` | Clear the active search highlight |
+| `:s/pat/repl/` | | Substitute `pat` with `repl` on the current line |
+| `:%s/pat/repl/` | | Substitute `pat` with `repl` across the whole buffer |
+| `:%s/pat/repl/g` | | Substitute all occurrences on every line |
+
+### LSP and diagnostics
+
+| Command | Description |
+|---------|-------------|
+| `:lsp` | Show the LSP status panel for the current buffer |
+| `:lsp all` | Show the LSP status panel for every configured language |
+
+### Utilities
+
+| Command | Description |
+|---------|-------------|
+| `:log` | Open the Vorto debug log file |
+
+---
+
+## Fuzzy finder
+
+The fuzzy finder opens a full-screen picker that narrows a large list as you type. All fuzzy pickers share the same key model:
+
+| Key | Action |
+|-----|--------|
+| Any character | Filter the list |
+| `↑` / `Ctrl-p` | Move selection up |
+| `↓` / `Ctrl-n` | Move selection down |
+| `Enter` | Confirm the selection |
+| `Esc` / `Ctrl-c` | Cancel and close the picker |
+
+### File picker
+
+Open with `Space f` in Normal mode. The picker lists all files in the current workspace, respecting `.gitignore` rules and hiding dotfile paths (files or directories whose name starts with `.`).
+
+<Note>
+Press `Space F` (uppercase) to include dotfiles such as `.env` and `.github/` in the list. `.gitignore` rules still apply.
+</Note>
+
+### Line picker
+
+Open with `Space l` in Normal mode. The picker lists every line in the active buffer. Selecting a line jumps the cursor to that position.
+
+### Workspace search
+
+Open with `Space /` in Normal mode. This picker performs a substring search across every line of every tracked file in the workspace. The query uses smart-case matching: a fully lowercase query is case-insensitive; any uppercase character makes the search case-sensitive. Selecting a result jumps directly to the matched line and column.
+
+### Buffer picker
+
+Open with `Space b` in Normal mode, or run `:bls` / `:buffers` from the command prompt. The picker lists all currently open buffers, most recently used first. Selecting a buffer switches to it.
+
+### Diagnostics picker
+
+| Binding | Scope |
+|---------|-------|
+| `Space d` | Diagnostics in the current buffer |
+| `Space D` | Diagnostics across the entire workspace |
+
+The diagnostics picker lists LSP errors, warnings, and hints. Selecting an entry jumps to the affected location in the relevant file.
+
+### References picker
+
+The references picker opens automatically when you run `gr` (find references) in Normal mode or use `gd` / `gD` / `gi` for LSP navigation when multiple results are returned. It uses the same picker interface as the other fuzzy finders.

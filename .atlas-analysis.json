@@ -1,0 +1,89 @@
+{
+  "projectType": "cli-tool",
+  "projectName": "Vorto",
+  "projectDescription": "A modal terminal text editor with tree-sitter syntax highlighting and Language Server Protocol support, inspired by Vim.",
+  "theme": "palm",
+  "primaryColor": "#4A7FA5",
+  "lightColor": "#EAF2FB",
+  "darkColor": "#1A2E3D",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Editing",
+            "pages": [
+              "editing/modes",
+              "editing/keybindings",
+              "editing/commands"
+            ]
+          },
+          {
+            "group": "Language Support",
+            "pages": [
+              "languages/grammars",
+              "languages/lsp",
+              "languages/supported-languages"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/overview",
+              "configuration/editor-settings",
+              "configuration/keybindings",
+              "configuration/languages",
+              "configuration/lsp-servers"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/first-project",
+              "guides/lsp-setup",
+              "guides/custom-language",
+              "guides/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Modal editing (Normal, Insert, Visual, Visual-Line, Visual-Block modes) inspired by Vim",
+    "Tree-sitter syntax highlighting with on-demand grammar installation",
+    "Language Server Protocol client (diagnostics, hover, completions, code actions, goto definition)",
+    "Fuzzy file, buffer, and symbol finder",
+    "Configurable keymap, cursor shapes, and per-language indent settings via TOML",
+    "VCS-aware gutter with git integration",
+    "System clipboard integration",
+    "Format on save via external formatters or LSP",
+    "Indent guides with optional animation",
+    "GitHub Copilot ghost-text completions"
+  ],
+  "publicApiSurface": [
+    "vorto [FILE|DIR]",
+    "vorto -h | --help",
+    "vorto -V | --version",
+    "vorto grammar list",
+    "vorto grammar install <name>... | --all",
+    "vorto grammar install-queries <name>... | --all",
+    "vorto grammar remove <name>...",
+    "~/.config/vorto/config.toml (editor, cursor, keymap, languages, lsp configuration)",
+    "[[bind]] keys/action TOML table for custom keybindings",
+    "[editor] TOML table (indent_width, tab_width, use_tabs, show_whitespace, format_on_save, indent_guides, indent_guide_style, indent_animation)",
+    "[cursor] TOML table (normal, insert, visual shapes; blinking)",
+    "[languages.<name>] TOML table (extensions, grammar, comment_token, lsp, formatter, editor overrides)",
+    "[lsp.<name>] TOML table (command, args, language_id, root_markers)",
+    ".vorto workspace-local config file or .vorto/config.toml directory"
+  ]
+}

@@ -1,0 +1,195 @@
+---
+title: How to troubleshoot common problems in the Vorto editor
+description: Fix syntax highlighting failures, LSP servers that won't start, grammar build errors, indentation problems, config not loading, and unresponsive keys.
+---
+
+This page covers the most common issues encountered when running Vorto, grouped by symptom. Work through the relevant section top to bottom — each item adds one more thing to check before escalating further.
+
+<AccordionGroup>
+  <Accordion title="Syntax highlighting not working">
+    Vorto uses tree-sitter grammars for syntax highlighting. Grammars are not bundled with the binary — you must install them separately.
+
+    **Install the grammar for your language**
+
+    ```sh
+    vorto grammar install <language>
+    ```
+
+    For example:
+
+    ```sh
+    vorto grammar install rust python typescript
+    ```
+
+    **Check which grammars are installed**
+
+    ```sh
+    vorto grammar list
+    ```
+
+    The output shows each built-in recipe, whether the compiled library is present (`lib ✓` or `lib ✗`), and the status of the highlight queries.
+
+    **Ensure a C compiler is available**
+
+    Building a grammar compiles a C source file. `gcc` or `clang` must be on your `PATH`:
+
+    ```sh
+    gcc --version
+    # or
+    clang --version
+    ```
+
+    If the compiler is missing, install it through your system package manager and then re-run `vorto grammar install`.
+
+    <Note>
+      After installing a grammar, restart Vorto so it can load the newly compiled library.
+    </Note>
+  </Accordion>
+
+  <Accordion title="LSP not starting">
+    Vorto starts LSP servers lazily — a server process only spawns when you open a file of the matching type. If features like diagnostics or hover are absent, work through these checks.
+
+    **Verify the server binary is installed and on PATH**
+
+    Run the server binary directly to confirm it's reachable:
+
+    ```sh
+    rust-analyzer --version
+    # or
+    vtsls --version
+    ```
+
+    If the command isn't found, install the server (see [Set up LSP support](/guides/lsp-setup)) and ensure its install location is in your `PATH`.
+
+    **Check that root markers exist**
+
+    Vorto uses root marker files to locate the workspace root before starting a server. The built-in root markers are:
+
+    | Server | Root markers |
+    |--------|-------------|
+    | rust-analyzer | `Cargo.toml`, `rust-project.json` |
+    | pyright | `pyproject.toml`, `setup.py`, `setup.cfg`, `requirements.txt` |
+    | vtsls / typescript-language-server | `package.json`, `tsconfig.json`, `jsconfig.json` |
+    | gopls | `go.mod`, `go.work` |
+    | clangd | `compile_commands.json`, `.clangd`, `Makefile`, `CMakeLists.txt` |
+
+    If the project lacks these files, the server may not start. Create the appropriate root file or add a custom `root_markers` override in your `[lsp.<name>]` config block.
+
+    **Check connection status with `:lsp`**
+
+    From Command mode, run:
+
+    ```
+    :lsp
+    ```
+
+    This opens a status modal listing every language that has an LSP configured and whether the server is connected.
+  </Accordion>
+
+  <Accordion title="Grammar install fails">
+    **Check the terminal output for build errors**
+
+    Grammar installation prints detailed output to stderr. Look for compiler error messages immediately after the `==> installing <name>` line.
+
+    **Ensure a C compiler is present**
+
+    ```sh
+    gcc --version
+    clang --version
+    ```
+
+    Install one through your system package manager if neither is found.
+
+    **Remove a broken install and retry**
+
+    If a previous install attempt left a corrupt file behind, remove it and start fresh:
+
+    ```sh
+    vorto grammar remove <name>
+    vorto grammar install <name>
+    ```
+
+    **Refresh only the query files**
+
+    If the library compiled correctly in the past but the highlight queries are stale, refresh them without rebuilding the grammar:
+
+    ```sh
+    vorto grammar install-queries <name>
+    ```
+  </Accordion>
+
+  <Accordion title="Pasted text has wrong indentation">
+    Vorto uses **bracketed paste** to receive clipboard content. In bracketed paste mode the editor receives the full paste as a single event rather than as a stream of individual key presses, which lets it suppress auto-indent during the paste. If your terminal does not support bracketed paste, each pasted newline triggers auto-indent and the result is over-indented.
+
+    **Check terminal support**
+
+    Bracketed paste is supported by most modern terminals (Kitty, iTerm2, Alacritty, WezTerm, Ghostty). If you're using an older terminal emulator, upgrade or switch to one that supports it.
+
+    **Temporarily disable format-on-save**
+
+    If indentation is being mangled by the formatter running on save, you can disable it for the affected language in your config:
+
+    ```toml
+    [languages.python]
+    format_on_save = false
+    ```
+
+    Re-enable it once you've confirmed the paste looks correct.
+  </Accordion>
+
+  <Accordion title="Config file not loaded">
+    Vorto looks for its config file in the following order, stopping at the first match:
+
+    1. `.vorto/config.toml` in the current directory (workspace directory form)
+    2. `.vorto` file in the current directory (workspace single-file form)
+    3. `$XDG_CONFIG_HOME/vorto/config.toml`
+    4. `~/.config/vorto/config.toml`
+
+    **Verify the file exists at the expected path**
+
+    ```sh
+    ls ~/.config/vorto/config.toml
+    ```
+
+    **Check for TOML parse errors**
+
+    Syntax errors in `config.toml` are reported at startup in the terminal. If Vorto launches but your settings aren't applied, look for a parse error message before the editor UI appears.
+
+    **Workspace config takes precedence**
+
+    A `.vorto` file or `.vorto/config.toml` directory in the project root silently overrides the global config for that workspace. If settings change unexpectedly when you switch projects, check whether a workspace config exists:
+
+    ```sh
+    ls .vorto
+    ls .vorto/config.toml
+    ```
+
+    <Tip>
+      Run `vorto grammar list` from the project directory to confirm which config Vorto is actually reading — the output includes the resolved grammar and query directory paths, which are derived from the active config.
+    </Tip>
+  </Accordion>
+
+  <Accordion title="Key not working as expected">
+    Vorto uses the **Kitty keyboard protocol** on terminals that support it, which allows unambiguous encoding of key combinations that traditional terminals conflate (e.g., `Ctrl+Shift+letter`, `Alt+special`). On terminals that don't support the protocol, Vorto falls back to legacy encoding.
+
+    **Check terminal keyboard support**
+
+    Use a terminal that supports the Kitty keyboard protocol (Kitty, Ghostty, WezTerm, and recent versions of Alacritty and iTerm2) to get the most reliable key handling. If you're on a terminal that doesn't support it, some modifier combinations may not be distinguishable.
+
+    **Log raw key events to diagnose mismatches**
+
+    Set the `VORTO_KEY_LOG` environment variable to a file path before launching Vorto. Vorto will write every raw key event it receives to that file:
+
+    ```sh
+    VORTO_KEY_LOG=/tmp/keys.log vorto src/main.rs
+    ```
+
+    Then inspect the log to see what key sequence Vorto actually received when you pressed the key in question:
+
+    ```sh
+    cat /tmp/keys.log
+    ```
+
+    Compare the logged sequence with the binding you expect to be active and adjust your `[[bind]]` entries in `config.toml` accordingly.
+  </Accordion>
+</AccordionGroup>

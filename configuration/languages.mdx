@@ -1,0 +1,152 @@
+---
+title: "Per-language settings in Vorto: the [languages] config table"
+description: Reference for the [languages.<name>] table — file extensions, grammar, comment token, editor overrides, LSP references, and external formatters.
+---
+
+Vorto ships with built-in definitions for common languages. You can override any field on a built-in language or add an entirely new one using `[languages.<name>]` blocks in `config.toml`. Fields you omit fall through to the built-in defaults, so you only need to specify what you're changing.
+
+## Table fields
+
+### `extensions`
+
+**Type:** list of strings
+
+File extensions (without the leading dot) that Vorto maps to this language. Replacing this list entirely replaces the built-in extension set for the language — if you want to add extensions you must re-state the existing ones alongside the new ones.
+
+### `grammar`
+
+**Type:** string  
+**Default:** the language name
+
+The filename stem of the tree-sitter grammar library to load from the grammar directory. For example, `grammar = "fish-shell"` loads `grammars/fish-shell.so` (or `.dylib` / `.dll` on macOS / Windows). When unset, Vorto uses the language name as the stem.
+
+### `grammar_dir`
+
+**Type:** path string
+
+Override the grammar directory for this language only. When set, Vorto looks for the grammar shared library here instead of the global `grammar_dir`. Useful when you want to keep a patched grammar separate from your main grammar directory.
+
+### `query_dir`
+
+**Type:** path string
+
+Override the query directory for this language only. When set, Vorto looks for `highlights.scm`, `indents.scm`, and other query files here instead of the global `query_dir/<lang>/`.
+
+### `comment_token`
+
+**Type:** string
+
+The single-line comment prefix used by the `<space>c` toggle. For example, `"//"` for Rust or `"#"` for Python. Leave this unset to disable comment toggling for the language entirely (JSON has no single-line comment syntax, so its built-in leaves this unset).
+
+### Editor setting overrides
+
+The editor fields from `[editor]` can be overridden per language by placing them directly in the `[languages.<name>]` table. There is no nested `[editor]` sub-table here — the keys are flattened:
+
+| Field | Type | Description |
+|---|---|---|
+| `indent_width` | integer | Columns per indent level |
+| `tab_width` | integer | Visual width of a literal tab character |
+| `use_tabs` | boolean | Indent with tabs instead of spaces |
+| `show_whitespace` | boolean | Render visible whitespace markers |
+| `format_on_save` | boolean | Run formatter before writing to disk |
+| `indent_guides` | boolean | Draw vertical indent guide lines |
+| `indent_guides_skip_levels` | integer | Suppress the N shallowest guides |
+| `indent_guide_style` | string | `"line"` or `"p10k"` |
+| `indent_animation` | boolean | Animate active guide scope expansion |
+| `indent_animation_ms` | integer | Animation duration in milliseconds |
+
+Any field not set here falls through to the global `[editor]` setting.
+
+### `lsp`
+
+**Type:** list of strings
+
+Names of LSP servers (keys from the `[lsp]` table) to attach to buffers of this language. This list is replaced whole — it is not merged with the built-in default. To keep the default servers and add one more, re-state all the names you want:
+
+```toml
+[languages.typescript]
+lsp = ["vtsls", "typescript-language-server", "my-custom-server"]
+```
+
+To disable all LSP for a language, set it to an empty list:
+
+```toml
+[languages.python]
+lsp = []
+```
+
+### `formatter.command` and `formatter.args`
+
+**Type:** string and list of strings
+
+Defines an external formatter. Vorto pipes the buffer's text on stdin and replaces the buffer with stdout. When unset, Vorto falls back to `textDocument/formatting` against the first attached LSP on save. The `formatter` table is replaced whole — `command` and `args` always go together.
+
+```toml
+[languages.python]
+formatter = { command = "black", args = ["-q", "-"] }
+```
+
+## Adding a new language
+
+To add a language Vorto doesn't know about, define it from scratch. The `extensions` field is required for Vorto to associate files with the language:
+
+```toml
+[languages.fish]
+extensions = ["fish"]
+comment_token = "#"
+```
+
+If the grammar stem matches a different name from the language name, set `grammar` explicitly:
+
+```toml
+[languages.fish]
+extensions = ["fish"]
+comment_token = "#"
+grammar = "fish-shell"
+```
+
+## Overriding built-in languages
+
+To tweak only specific settings on a built-in language, just include the fields you want to change. Everything else survives from the built-in:
+
+```toml
+# Rust: already has indent_width = 4; this just widens tab stops
+[languages.rust]
+tab_width = 4
+indent_width = 4
+
+# Go: canonical tab-indented style
+[languages.go]
+use_tabs = true
+tab_width = 4
+
+# Python: wider indentation
+[languages.python]
+indent_width = 4
+tab_width = 4
+```
+
+## Using an external formatter
+
+```toml
+[languages.python]
+formatter = { command = "black", args = ["-q", "-"] }
+
+[languages.markdown]
+formatter = { command = "prettier", args = ["--parser", "markdown", "--stdin-filepath", "stdin.md"] }
+```
+
+## Referencing an LSP server
+
+Once you define a server in `[lsp.<name>]`, reference it by name from any language:
+
+```toml
+[lsp.my-server]
+command = "my-lsp-bin"
+args = ["--stdio"]
+
+[languages.fish]
+extensions = ["fish"]
+comment_token = "#"
+lsp = ["my-server"]
+```

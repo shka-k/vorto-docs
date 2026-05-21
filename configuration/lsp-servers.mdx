@@ -1,0 +1,128 @@
+---
+title: "Configure LSP servers in Vorto with the [lsp] config table"
+description: Reference for the [lsp.<name>] table, overlay behavior for built-in servers, adding custom servers, and the full list of built-in server names.
+---
+
+Vorto manages LSP server connections automatically for supported languages. You can adjust how a built-in server is launched, override its arguments, or define an entirely new server — all through `[lsp.<name>]` blocks in `config.toml`. Changes overlay onto the built-in defaults field by field, so you only need to include what you're changing.
+
+## Table fields
+
+### `command`
+
+**Type:** string  
+**Required for new servers, optional for built-in overrides**
+
+The name or path of the server binary. For built-in servers this is already set — you only need to include `command` if you want to change the binary path or if you're defining a brand-new server. New servers that omit `command` cause a startup error.
+
+### `args`
+
+**Type:** list of strings
+
+Command-line arguments passed to the server binary. Replaces the built-in args list in full — there is no merging. To keep the server's existing flags alongside new ones, re-state all the args you want.
+
+### `language_id`
+
+**Type:** string
+
+Overrides the LSP `languageId` sent in `textDocument/didOpen` notifications. When unset, Vorto uses the language name as the id — usually the right answer. Set this when a server expects a different id than the language name, such as `"shellscript"` for `bash-language-server`.
+
+### `root_markers`
+
+**Type:** list of strings
+
+File names that Vorto uses to find the project root for this server. Vorto walks up the directory tree from the open file and stops at the first directory containing one of these files. Replaces the built-in list in full.
+
+## Overlay behavior
+
+When your config includes a `[lsp.<name>]` block that matches a built-in server name, Vorto merges your fields onto the built-in defaults — only the fields you set are replaced, the rest stay as they are:
+
+```toml
+# Override only the args for the built-in vtsls entry;
+# command and root_markers remain as built in.
+[lsp.vtsls]
+args = ["--stdio", "--log-level", "verbose"]
+```
+
+When your config includes a `[lsp.<name>]` block with a name that has no built-in, it creates a new server entry. New entries must include `command`:
+
+```toml
+[lsp.my-server]
+command = "my-lsp-bin"
+args = ["--stdio"]
+root_markers = [".my-project"]
+```
+
+## Examples
+
+### Overriding args on a built-in server
+
+```toml
+[lsp.rust-analyzer]
+args = ["--log-file", "/tmp/rust-analyzer.log"]
+```
+
+### Changing the binary path for a built-in
+
+```toml
+[lsp.gopls]
+command = "/usr/local/go/bin/gopls"
+```
+
+### Adding a brand-new custom server
+
+```toml
+[lsp.my-server]
+command = "my-lsp-bin"
+args = ["--stdio"]
+root_markers = [".my-project-root"]
+```
+
+Then reference it from a language:
+
+```toml
+[languages.fish]
+extensions = ["fish"]
+comment_token = "#"
+lsp = ["my-server"]
+```
+
+### Setting a custom `language_id`
+
+```toml
+# Force this server to receive languageId "shellscript" regardless of
+# the language name Vorto would normally send.
+[lsp.bash-language-server]
+language_id = "shellscript"
+```
+
+## Built-in servers
+
+Vorto includes default configurations for the following servers. Install the server binary on your `PATH` and it will be used automatically for the matching language.
+
+| Server name | Binary | Default languages |
+|---|---|---|
+| `rust-analyzer` | `rust-analyzer` | Rust |
+| `pyright` | `pyright-langserver` | Python |
+| `taplo` | `taplo` | TOML |
+| `vtsls` | `vtsls` | TypeScript, TSX |
+| `typescript-language-server` | `typescript-language-server` | TypeScript, TSX, JavaScript |
+| `gopls` | `gopls` | Go |
+| `kotlin-lsp` | `kotlin-lsp` | Kotlin |
+| `clangd` | `clangd` | C, C++ |
+| `jdtls` | `jdtls` | Java |
+| `bash-language-server` | `bash-language-server` | Bash |
+| `vscode-json-language-server` | `vscode-json-language-server` | JSON |
+| `yaml-language-server` | `yaml-language-server` | YAML |
+| `marksman` | `marksman` | Markdown |
+| `vscode-html-language-server` | `vscode-html-language-server` | HTML |
+| `vscode-css-language-server` | `vscode-css-language-server` | CSS |
+| `lua-language-server` | `lua-language-server` | Lua |
+| `ruby-lsp` | `ruby-lsp` | Ruby |
+| `zls` | `zls` | Zig |
+
+For languages with multiple built-in servers listed (TypeScript and TSX ship with both `vtsls` and `typescript-language-server`), Vorto silently skips any server whose binary is not found on your `PATH`. To limit a language to a specific server, set `lsp` on the language entry:
+
+```toml
+[languages.typescript]
+lsp = ["vtsls"]
+```

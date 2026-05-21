@@ -1,0 +1,141 @@
+---
+title: "Vorto editor and cursor settings: complete config reference"
+description: "Complete reference for the [editor] and [cursor] config sections — all field names, types, defaults, and full TOML examples you can copy."
+---
+
+The `[editor]` section of `config.toml` controls how Vorto renders and edits text globally. Every field has a built-in default, so you only need to include the settings you want to change. Per-language overrides use the same field names, but placed directly in `[languages.<name>]` rather than under a nested `[editor]` key — see [Per-language settings](/configuration/languages) for details.
+
+## Editor settings
+
+### `indent_width`
+
+**Type:** integer  
+**Default:** `2`
+
+The number of columns Vorto uses when it auto-indents a line — for example, when you press Enter inside a block. This controls how many spaces are inserted (or how many tab stops are advanced when `use_tabs = true`).
+
+### `tab_width`
+
+**Type:** integer  
+**Default:** `4`
+
+The visual width of a literal `\t` character in the buffer. This does not affect auto-indent behavior (which is controlled by `indent_width`). Go-style codebases typically set this to `8` to match `gofmt` conventions.
+
+### `use_tabs`
+
+**Type:** boolean  
+**Default:** `false`
+
+When `true`, auto-inserted indentation (newlines, bracket level bumps) uses `\t` characters instead of spaces. The most common use is a per-language override for Go.
+
+### `show_whitespace`
+
+**Type:** boolean  
+**Default:** `false`
+
+When `true`, spaces and tabs in the buffer are rendered with visible marker glyphs — a middle dot for spaces and an arrow for tabs — drawn in a dim foreground color.
+
+### `format_on_save`
+
+**Type:** boolean  
+**Default:** `true`
+
+When `true`, Vorto runs the formatter before writing the file to disk. It uses the external formatter command configured for the language (`formatter.command`), or falls back to `textDocument/formatting` against the first attached LSP if no external formatter is configured. Set to `false` to disable all automatic formatting on save.
+
+### `indent_guides`
+
+**Type:** boolean  
+**Default:** `true`
+
+When `true`, Vorto draws vertical guide lines at each indentation level. The guide containing the cursor is painted in a distinct color. Set to `false` to hide all guides.
+
+### `indent_guides_skip_levels`
+
+**Type:** integer  
+**Default:** `0`
+
+Suppresses the shallowest N indent guides. `0` shows every level. `1` hides the leftmost guide. `2` hides the two shallowest, and so on. When the deepest visible nesting is shallower than this value, no guides appear at all — prefer `0` for files that stay shallow most of the time.
+
+### `indent_guide_style`
+
+**Type:** string  
+**Default:** `"line"`  
+**Values:** `"line"`, `"p10k"`
+
+Controls the visual style of indent guides:
+
+- `"line"` — draws a plain `│` bar on every guide cell; the active scope's bar is bold.
+- `"p10k"` — decorates the active scope with powerlevel10k-style glyphs: a top corner (`╭─`) at the first body row and a turn arrow (`╰─>`) at the cursor row, connected by `│`.
+
+### `indent_animation`
+
+**Type:** boolean  
+**Default:** `false`
+
+When `true`, the active indent guide expands from the cursor row outward to the scope boundaries each time the cursor enters a new scope.
+
+### `indent_animation_ms`
+
+**Type:** integer  
+**Default:** `100`
+
+Duration of the active-guide expand animation in milliseconds. This setting has no effect unless `indent_animation = true`.
+
+## Complete `[editor]` example
+
+```toml
+[editor]
+indent_width = 2
+tab_width = 4
+use_tabs = false
+show_whitespace = false
+format_on_save = true
+indent_guides = true
+indent_guides_skip_levels = 0
+indent_guide_style = "line"
+indent_animation = false
+indent_animation_ms = 100
+```
+
+## Cursor settings
+
+The `[cursor]` section controls the cursor shape in each editor mode and whether it blinks. Vorto sends DECSCUSR escape sequences to your terminal, so the effect depends on terminal support.
+
+### `blinking`
+
+**Type:** boolean  
+**Default:** `false`
+
+When `true`, the cursor blinks in all modes (unless `terminal` shape is used, which defers blinking behavior to the terminal itself).
+
+### `normal`, `insert`, `visual`, `visual_line`, `visual_block`
+
+**Type:** string  
+**Values:** `"block"`, `"bar"`, `"underbar"`, `"terminal"`
+
+Shape of the cursor in each mode. The defaults are:
+
+| Mode | Default shape |
+|---|---|
+| `normal` | `"block"` |
+| `insert` | `"bar"` |
+| `visual` | `"underbar"` |
+| `visual_line` | `"underbar"` |
+| `visual_block` | `"underbar"` |
+
+- `"block"` — solid filled rectangle
+- `"bar"` — thin vertical line (also accepted as `"line"`)
+- `"underbar"` — thin horizontal underline (also accepted as `"underscore"` or `"underline"`)
+- `"terminal"` — defer to the terminal's own default cursor shape; `blinking` is ignored for this shape (also accepted as `"default"`)
+
+## Complete `[cursor]` example
+
+```toml
+[cursor]
+blinking = false
+normal = "block"
+insert = "bar"
+visual = "underbar"
+visual_line = "underbar"
+visual_block = "underbar"
+```

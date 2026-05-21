@@ -1,0 +1,64 @@
+---
+title: "Install Vorto from crates.io or build from source"
+description: "Install Vorto from crates.io with a single Cargo command, or build from source with Make or Cargo. Verify the binary before opening your first file."
+---
+
+Vorto is distributed as a single binary with no runtime dependencies. You can install it from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. Both paths require a Rust toolchain that supports edition 2024.
+
+<Note>
+  A C compiler (such as `gcc` or `clang`) is required when building tree-sitter grammars after installation. The editor itself compiles and runs without one, but `vorto grammar install` will fail without it.
+</Note>
+
+## Install from crates.io
+
+The fastest way to install Vorto is directly from crates.io:
+
+```bash
+cargo install vorto
+```
+
+Cargo downloads, compiles, and places the `vorto` binary in `~/.cargo/bin`. Make sure that directory is on your `PATH`.
+
+## Install from source
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/shka-k/vorto.git
+    cd vorto
+    ```
+  </Step>
+  <Step title="Build and install">
+    Choose one of the two methods below:
+
+    <CodeGroup>
+
+    ```bash Make install
+    make install
+    ```
+
+    ```bash Cargo build
+    cargo build --release
+    ```
+
+    </CodeGroup>
+
+    `make install` places the binary at `~/.local/bin/vorto`. Make sure `~/.local/bin` is on your `PATH`.
+
+    `cargo build --release` produces the binary at `target/release/vorto`. Copy it to a directory on your `PATH` manually.
+  </Step>
+</Steps>
+
+## Verify the installation
+
+Run the following command to confirm Vorto is installed and accessible:
+
+```bash
+vorto --version
+```
+
+You should see output like `vorto 0.9.7`. If the command is not found, check that the install directory is included in your `PATH`.
+
+<Tip>
+  Once Vorto is installed, run `vorto grammar install rust` (or whichever language you use first) to set up syntax highlighting before you open your first file.
+</Tip>

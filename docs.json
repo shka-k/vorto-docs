@@ -1,0 +1,68 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Vorto",
+  "theme": "palm",
+  "colors": {
+    "primary": "#4A7FA5",
+    "light": "#EAF2FB",
+    "dark": "#1A2E3D"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/shka-k/vorto"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Editing",
+            "pages": [
+              "editing/modes",
+              "editing/keybindings",
+              "editing/commands"
+            ]
+          },
+          {
+            "group": "Language Support",
+            "pages": [
+              "languages/grammars",
+              "languages/lsp",
+              "languages/supported-languages"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "configuration/overview",
+              "configuration/editor-settings",
+              "configuration/keybindings",
+              "configuration/languages",
+              "configuration/lsp-servers"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/first-project",
+              "guides/lsp-setup",
+              "guides/custom-language",
+              "guides/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

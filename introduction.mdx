@@ -1,0 +1,51 @@
+---
+title: "Vorto: modal terminal editor for modern workflows"
+description: "Learn what Vorto is, how its modal editing model works, which languages it supports, and how to navigate the documentation to start editing faster."
+---
+
+Vorto is a modal terminal text editor written in Rust. It combines Vim-inspired keyboard-driven editing with tree-sitter syntax highlighting and a full Language Server Protocol client, giving you diagnostics, completions, hover documentation, code actions, and goto definition — all inside the terminal. This page explains Vorto's core concepts and points you to the sections you need most.
+
+## Editing model
+
+Vorto is a **modal editor**: the meaning of every key depends on the active mode. There are five editing modes:
+
+- **Normal** — the default mode for navigation and text manipulation
+- **Insert** — for typing new text; enter with `i`, return to Normal with `Esc`
+- **Visual** — for selecting characters; enter with `v`
+- **Visual Line** — for selecting whole lines; enter with `V`
+- **Visual Block** — for selecting rectangular columns; enter with `Ctrl-V`
+
+A command prompt is available from Normal mode by pressing `:`, letting you run commands like `:w` (save) and `:q` (quit). This modal model keeps your hands on the home row and removes the need for modifier-heavy shortcuts.
+
+## Language support
+
+Vorto uses [tree-sitter](https://tree-sitter.github.io) for syntax highlighting. Grammars are not bundled — you install the ones you need with `vorto grammar install`. Over twenty built-in recipes are available, including Rust, Python, Go, JavaScript, TypeScript, and more.
+
+The LSP client connects to any Language Server you have installed. It supports diagnostics, completions, hover, code actions, and goto definition out of the box.
+
+## Configuration
+
+Editor settings, keymaps, themes, and per-language indent rules all live in `~/.config/vorto/config.toml`. Installed grammars and highlight queries are stored under `~/.config/vorto/grammars/` and `~/.config/vorto/queries/` respectively.
+
+## Explore the docs
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install Vorto from crates.io or build it from source.
+  </Card>
+  <Card title="Quick start" icon="rocket" href="/quickstart">
+    Open a file, navigate in Normal mode, and make your first edit.
+  </Card>
+  <Card title="Editing modes" icon="keyboard" href="/editing/modes">
+    Understand Normal, Insert, Visual, and Command mode in depth.
+  </Card>
+  <Card title="Language grammars" icon="tree" href="/languages/grammars">
+    Install and manage tree-sitter grammars for syntax highlighting.
+  </Card>
+  <Card title="LSP client" icon="plug" href="/languages/lsp">
+    Connect language servers for completions, diagnostics, and more.
+  </Card>
+  <Card title="Configuration" icon="sliders" href="/configuration/overview">
+    Customize keybindings, themes, and language settings via TOML.
+  </Card>
+</CardGroup>

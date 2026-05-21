@@ -1,0 +1,111 @@
+---
+title: How to open and edit your first project with Vorto
+description: A hands-on walkthrough for new Vorto users — open a directory, install a grammar, edit files in Normal and Insert mode, and quit safely.
+---
+
+Vorto is a modal terminal editor, so the first few minutes can feel unfamiliar if you're coming from a non-modal editor. This guide walks you through every step you need to open a real project, make a change, and save it — from the command line to quitting cleanly.
+
+## Open a project
+
+<Steps>
+  <Step title="Open a directory or file">
+    Pass a directory to open the fuzzy file picker and choose where to start:
+
+    ```sh
+    vorto .
+    ```
+
+    If you already know the file you want, pass it directly:
+
+    ```sh
+    vorto src/main.rs
+    ```
+  </Step>
+
+  <Step title="Install the grammar for your language">
+    Vorto ships with recipes for common languages but does not bundle the compiled libraries. Install the grammar for the language you're working in before you open files of that type:
+
+    ```sh
+    vorto grammar install rust
+    ```
+
+    To see every available recipe and its install status, run:
+
+    ```sh
+    vorto grammar list
+    ```
+
+    <Note>
+      A C compiler (`gcc` or `clang`) must be on your `PATH` when building grammars. The build happens once; subsequent editor starts load the cached library.
+    </Note>
+  </Step>
+
+  <Step title="Navigate in Normal mode">
+    Vorto starts in **Normal mode**. Use the Vim-style movement keys to move around the buffer:
+
+    | Key | Action |
+    |-----|--------|
+    | `h` | Move left |
+    | `j` | Move down |
+    | `k` | Move up |
+    | `l` | Move right |
+  </Step>
+
+  <Step title="Enter Insert mode to edit">
+    Press `i` to enter **Insert mode** and start typing. The cursor changes shape to indicate the mode switch.
+
+    Press `Esc` to return to Normal mode when you're done editing.
+  </Step>
+
+  <Step title="Save the file">
+    From Normal mode, enter Command mode with `:` and type `w` to write the file:
+
+    ```
+    :w
+    ```
+
+    If you have `<C-s>` bound in your config, that key saves from any mode as well.
+  </Step>
+
+  <Step title="Read the git gutter">
+    Vorto shows VCS change indicators in the gutter (the narrow column to the left of the buffer):
+
+    | Symbol | Meaning |
+    |--------|---------|
+    | `+` | Added line |
+    | `~` | Modified line |
+    | `-` | Deleted line |
+
+    The gutter updates as you edit, giving you a live diff against the last commit.
+  </Step>
+
+  <Step title="Open another file">
+    Use the fuzzy finder to switch files without leaving the editor. You can also open a file by path from Command mode:
+
+    ```
+    :e src/lib.rs
+    ```
+  </Step>
+
+  <Step title="Quit">
+    To quit the current buffer:
+
+    ```
+    :q
+    ```
+
+    To save and quit in one command:
+
+    ```
+    :wq
+    ```
+
+    <Warning>
+      Vorto will warn you if you try to quit a buffer with unsaved changes. Use `:q!` to discard changes and force-quit.
+    </Warning>
+  </Step>
+</Steps>
+
+## Next steps
+
+Once you're comfortable with basic editing, set up LSP support to get diagnostics, hover documentation, and completions for your language. See [Set up Language Server Protocol support](/guides/lsp-setup) to continue.
