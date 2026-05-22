@@ -1,0 +1,33 @@
+---
+title: "Week of May 22, 2026"
+description: "File tree explorer, LSP status modal, eight new languages, and a slew of UI polish."
+---
+
+This week's release rolls up versions **0.9.3 through 0.10.3**, with a new file
+explorer, an LSP status view, broader language coverage, and several editing fixes.
+
+## New features
+
+- **File tree explorer.** Press `<space>e` to open a tree-style file explorer for the current workspace.
+- **`:lsp` status modal.** Run `:lsp` to see attached language servers, their status, and the workspace root for the current buffer. Copilot is included alongside other servers. See [LSP](/languages/lsp).
+- **Eight new languages.** Added syntax and grammar support for **SQL, Dockerfile, Makefile, HCL, diff, Vue, Svelte,** and richer **Markdown** highlighting. TSX is now its own language with tag autopairing. See [Supported languages](/languages/supported-languages).
+- **Language injection.** Embedded code blocks (for example, `<style>` and `<script>` in Vue and Svelte) now highlight using the injected language's grammar.
+- **Bracketed paste in Normal mode.** Paste from your terminal directly in Normal mode without entering Insert first.
+- **Selection marker in pickers.** Fuzzy finder and command hints now show a `>` marker on the active row for easier scanning.
+
+## Updates
+
+- **Faster grammar installs.** `grammar install --all` now downloads release tarballs in parallel. See [Grammars](/languages/grammars).
+- **Smarter LSP workspace root.** The LSP client walks up from the opened file to detect the workspace root, so servers attach correctly when you open a file from a subdirectory.
+- **LSP auto-shutdown.** Language servers shut down automatically once no open buffer references them, freeing memory on long sessions.
+- **Indent-preserving paste in Insert mode.** Multi-line pastes keep their original indentation instead of being re-indented line by line.
+- **Refreshed UI palette.** Popups and the active indent guide now use your terminal's color palette. The status bar uses bright-black with edge padding for better contrast.
+- **CSS highlighting.** Selectors are now visually distinct from declaration left-hand sides.
+- **Published to crates.io.** Tagged releases are now published automatically, so you can `cargo install vorto`. See [Installation](/installation).
+
+## Bug fixes
+
+- Cursor and selection backgrounds are preserved under the indent guide on blank lines.
+- Cursor and popup widths now account for fullwidth characters (CJK, emoji).
+- `rustfmt` now receives the `--edition` value from your `Cargo.toml`.
+- Tree-sitter injection load warnings are routed to the debug log instead of the status line.
