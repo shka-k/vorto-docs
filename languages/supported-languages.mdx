@@ -3,12 +3,12 @@ title: "Built-in language support in Vorto: extensions and servers"
 description: "A reference of every language Vorto supports by default — file extensions, tree-sitter grammar recipe, built-in LSP server, and default formatter."
 ---
 
-Vorto ships with built-in definitions for 21 languages. Each definition covers the file extensions that map to the language, which LSP server to use, and any default formatter. Tree-sitter grammar recipes are included for all languages except SQL, which has a recipe but no bundled query files. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
+Vorto ships with built-in definitions for 27 languages. Each definition covers the file extensions (and exact filenames where relevant) that map to the language, which tree-sitter grammar recipe is used, and any default LSP server or formatter. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
 
 ## Built-in language table
 
-| Language | Extensions | Grammar recipe | Built-in LSP server | Default formatter |
-|----------|-----------|---------------|---------------------|-------------------|
+| Language | Extensions / filenames | Grammar recipe | Built-in LSP server | Default formatter |
+|----------|------------------------|----------------|---------------------|-------------------|
 | Rust | `.rs` | `rust` | `rust-analyzer` | `rustfmt` |
 | Python | `.py` | `python` | `pyright` | — |
 | Go | `.go` | `go` | `gopls` | `gofmt` |
@@ -30,6 +30,12 @@ Vorto ships with built-in definitions for 21 languages. Each definition covers t
 | Ruby | `.rb` | `ruby` | `ruby-lsp` | — |
 | SQL | `.sql` | `sql` | — | — |
 | Zig | `.zig`, `.zon` | `zig` | `zls` | `zig fmt --stdin` |
+| Dockerfile | `.dockerfile`, `Dockerfile`, `Containerfile` | `dockerfile` | — | — |
+| Make | `.mk`, `.make`, `Makefile`, `makefile`, `GNUmakefile` | `make` | — | — |
+| HCL / Terraform | `.hcl`, `.tf`, `.tfvars` | `hcl` | `terraform-ls` | — |
+| Diff | `.diff`, `.patch` | `diff` | — | — |
+| Vue | `.vue` | `vue` | `vue-language-server` | — |
+| Svelte | `.svelte` | `svelte` | `svelteserver` | — |
 
 ## Notes on specific languages
 
@@ -41,9 +47,13 @@ Vorto ships with built-in definitions for 21 languages. Each definition covers t
 
 **Markdown** installs only the block-level grammar from `tree-sitter-grammars/tree-sitter-markdown`. The inline grammar requires injection support that is not yet implemented.
 
-**SQL** has a built-in grammar recipe and can be installed with `vorto grammar install sql`, but has no built-in LSP server.
+**SQL**, **Dockerfile**, **Make**, and **Diff** have built-in grammar recipes but no built-in LSP server.
 
-**Go** uses tab indentation by default, matching `gofmt` output.
+**Go** and **Make** use tab indentation by default — `gofmt` requires it for Go, and Make recipes are tab-indented by syntax.
+
+**HCL** covers Terraform (`.tf`, `.tfvars`) and generic HCL configs (`.hcl`) through a single grammar. The `terraform-ls` server is attached by default.
+
+**Vue** and **Svelte** use HTML-style comment tokens (`<!--`) since the outermost layer of each single-file component is a template. Comments inside `<script>` blocks will be incorrect until grammar injection is wired up.
 
 ## Installing grammars and LSP servers
 
