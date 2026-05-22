@@ -1,9 +1,9 @@
 ---
-title: "Vorto: modal terminal editor with LSP and tree-sitter"
-description: "Vorto is a fast, keyboard-driven terminal text editor with modal editing, tree-sitter syntax highlighting, and built-in Language Server Protocol support."
+title: "Vorto: a Vim-style terminal editor that just works"
+description: "A Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — no plugin manager, no init.lua."
 ---
 
-Vorto is a modal terminal text editor written in Rust, built for developers who want Vim-style keyboard-driven editing with modern features out of the box. It brings tree-sitter syntax highlighting and a full Language Server Protocol client — diagnostics, completions, hover, code actions, and goto definition — directly into the terminal.
+Vorto is a Rust-based modal terminal editor that bundles an LSP client, tree-sitter syntax highlighting, and GitHub Copilot support (through the Copilot LSP). Grammars install on demand, and the entire configuration lives in a single TOML file — no plugin manager, no init.lua, no package.json.
 
 <CardGroup cols={2}>
   <Card title="Installation" icon="download" href="/installation">
@@ -58,7 +58,7 @@ Vorto is a modal terminal text editor written in Rust, built for developers who 
     Precise, incremental syntax highlighting built from on-demand grammar installs.
   </Card>
   <Card title="LSP client" icon="plug" href="/languages/lsp">
-    Diagnostics, completions, hover docs, code actions, and goto definition.
+    Diagnostics, completions, hover docs, code actions, goto definition — and GitHub Copilot through the Copilot LSP.
   </Card>
   <Card title="Fuzzy finder" icon="magnifying-glass" href="/editing/commands">
     Fast fuzzy search across files, open buffers, and symbols.
