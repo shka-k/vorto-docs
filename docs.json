@@ -31,7 +31,8 @@
             "pages": [
               "editing/modes",
               "editing/keybindings",
-              "editing/commands"
+              "editing/commands",
+              "editing/hints"
             ]
           },
           {

@@ -5,6 +5,18 @@ description: "A Rust-based modal terminal text editor with built-in LSP, tree-si
 
 Vorto is a Rust-based modal terminal editor that bundles an LSP client, tree-sitter syntax highlighting, and GitHub Copilot support (through the Copilot LSP). Grammars install on demand, and the entire configuration lives in a single TOML file — no plugin manager, no init.lua, no package.json.
 
+## Why Vorto
+
+In the AI era, humans write less code by hand than ever before. Most of what we still do in an editor is read, review, and surgically edit — the exact workload modal editing was built for. Vim's command grammar is as relevant as it has ever been.
+
+What has stopped being worth it is the editor itself. Curating a plugin list, pinning versions, debugging a broken `init.lua` after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted workflow.
+
+Vorto is the response to that shift:
+
+- **Batteries included.** LSP client, tree-sitter highlighting, fuzzy finder, and GitHub Copilot all ship in the binary. Install once with `cargo install vorto` and start editing — no plugin manager, no `init.lua`, no `package.json`.
+- **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head. Pick it up faster; come back to it after a month without losing the muscle memory.
+- **One config file.** Keybindings, themes, indentation, and per-language settings all live in a single TOML file. Nothing to bootstrap, nothing to migrate.
+
 <CardGroup cols={2}>
   <Card title="Installation" icon="download" href="/installation">
     Install Vorto from crates.io or build from source in minutes.

@@ -1,0 +1,55 @@
+---
+title: "Inline command hints and the which-key panel"
+description: "Vorto pops up which-key hints during multi-key sequences and live command-name candidates in the command prompt — so you don't have to memorize the full Vim keymap."
+---
+
+Vim's expressive grammar is also its steepest learning curve: operators, motions, text objects, leaders, and surround commands all combine into chords that you either remember or don't. Vorto narrows that gap by showing **inline hint panels** as you type — both for multi-key Normal-mode sequences and for command-prompt completions. The panels are derived from the same binding tables the editor uses to dispatch keys, so whatever you remap or extend in `~/.config/vorto/config.toml` shows up automatically.
+
+There are two distinct panels.
+
+## Which-key panel
+
+When you press a key that opens a multi-key sequence — an operator, a leader, a `g` prefix, a `z` prefix, a `[` or `]` bracket prefix, a window prefix, or a surround command — Vorto pops a small panel **above the status bar in the bottom-right** listing every valid next key with a short description. The panel disappears the moment you complete the sequence or cancel with `Esc`.
+
+The panel triggers in every mid-parse state, including:
+
+| You pressed | Panel title | What it lists |
+|-------------|-------------|---------------|
+| `d`, `y`, `c`, `>`, `<`, `gc`, `gb` | `delete` / `yank` / `change` / `indent` / `dedent` / `comment` / `block-comment` | Motions, the operator's self-double shortcut (e.g. `dd`), and the surround entry (`ys` / `cs` / `ds`) where applicable |
+| `i` or `a` after an operator | `inner` / `around` | All registered text objects (word, quote, bracket, parameter, function, class, …) |
+| `Space` | `leader` | Every leader binding (file picker, buffer picker, rename, code action, hover, …) |
+| `g` | `goto` | All `g`-prefix targets (`gd`, `gD`, `gi`, `gr`, `gg`, `ge`, `gcc`, …) |
+| `z` | `viewport` | Viewport bindings (`zz`, `zt`, `zb`) |
+| `Ctrl-W` | `window (C-w)` | Window-prefix bindings (focus, split, close, cycle) |
+| `Space w` | `window` | Window sub-leader bindings (same operations, different chord) |
+| `]` / `[` | `next` / `prev` | Bracket-prefix targets (`]d`, `[d`, …) |
+| `f`, `F`, `t`, `T` | `find char` | Prompt to type the literal target character |
+| `r` | `replace` | Prompt to type the replacement character |
+| `ys`, `cs`, `ds` | `surround char` / `surround target` / `change surround` / `delete surround` | Surround pairs (`"`, `'`, `` ` ``, `( )` / `b`, `{ }` / `B`, `[ ]`, `< >`) and, for `ys`, the motion menu |
+
+Counts don't reset the hint context: typing `3d` still shows the `delete` menu because counts are ignored when resolving "what panel should I show right now?"
+
+<Note>
+The hint panel reads directly from Vorto's binding tables. If you remap `Space f` to a different action or add a new leader binding in your config, the panel reflects your version — there's no separate hints file to maintain.
+</Note>
+
+## Command hint panel
+
+Press `:` to open the command prompt, and Vorto shows a two-column hint panel **directly above the prompt** with command-name candidates that match what you've typed so far. Each row shows the command name and its description.
+
+- Filtering is **live**: type `:re` and you'll see `:reload`, `:reload-all`, and any other matching commands.
+- Press `Tab` to cycle forward through the matches and `Shift-Tab` to cycle backward. While cycling, the panel pins itself to the captured candidate list, so you can rewind without the matches shifting under you.
+- Once you've typed past the command name (i.e. you've entered a space), the command-name panel hides itself. If the command takes a file path, a `files` panel takes its place and shows path completions instead.
+- Both the primary name and every alias appear as separate rows. `:bls` and `:buffers` are the same command, but both are typeable — so both show up.
+
+The panel pulls from the same `COMMAND_BINDS` registry that dispatches commands, so any command documented in [Command mode](/editing/commands) appears here automatically.
+
+## Why this matters
+
+The full Vim keymap is large enough that most users either keep a cheat sheet open or settle into a small subset of commands they use daily. The hint panels collapse that tradeoff:
+
+- **New users** can start with `Space` or `g` and discover what's available without leaving the editor.
+- **Returning users** who haven't touched a modal editor in months don't lose their muscle memory — the panel reminds them what the next key does.
+- **Power users** get a free audit of their own keymap: remap something, press the prefix, and the panel confirms the change is wired up.
+
+The panels are not a tutorial mode you toggle on and off — they're always on, designed to stay out of your way (they only appear when you're mid-sequence) and disappear the moment you commit to an action.

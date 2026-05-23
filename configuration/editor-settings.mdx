@@ -81,6 +81,13 @@ When `true`, the active indent guide expands from the cursor row outward to the 
 
 Duration of the active-guide expand animation in milliseconds. This setting has no effect unless `indent_animation = true`.
 
+### `compact_folders`
+
+**Type:** boolean  
+**Default:** `true`
+
+Controls how the `Space e` file explorer groups its entries. When `true`, matches are grouped under a header line per parent directory, with file basenames indented underneath. When `false`, the explorer renders as a flat list of full paths — the same shape as the fuzzy file picker. Pick `false` if you'd rather keep one row per match and don't want the header rows.
+
 ## Complete `[editor]` example
 
 ```toml
@@ -95,6 +102,7 @@ indent_guides_skip_levels = 0
 indent_guide_style = "line"
 indent_animation = false
 indent_animation_ms = 100
+compact_folders = true
 ```
 
 ## Cursor settings
