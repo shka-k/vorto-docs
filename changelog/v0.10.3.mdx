@@ -1,0 +1,20 @@
+---
+title: "0.10.3"
+description: "Copilot appears in the :lsp status modal, > selection marker in pickers, and several UI palette fixes."
+---
+
+Released **May 22, 2026**.
+
+## New features
+
+- **Copilot in `:lsp` status modal.** Copilot is now listed alongside other language servers in the `:lsp` status view, so you can confirm its state at a glance. See [LSP](/lsp/overview).
+- **Selection marker in pickers.** Fuzzy finder and command hints draw a `>` marker on the active row for easier scanning.
+
+## Updates
+
+- **Refreshed UI palette.** Popups and the active indent guide now use your terminal's colour palette instead of hard-coded values.
+
+## Bug fixes
+
+- Cursor and selection backgrounds are preserved under the indent guide on blank lines.
+- Tree-sitter injection load warnings are routed to the debug log instead of the status line.

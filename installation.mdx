@@ -1,17 +1,27 @@
 ---
-title: "Install Vorto from crates.io or build from source"
-description: "Install Vorto from crates.io with a single Cargo command, or build from source with Make or Cargo. Verify the binary before opening your first file."
+title: "Install Vorto with mise, Cargo, or from source"
+description: "Install Vorto with mise, from crates.io with Cargo, or build from source with Make or Cargo. Verify the binary before opening your first file."
 ---
 
-Vorto is distributed as a single binary with no runtime dependencies. You can install it from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. Both paths require a Rust toolchain that supports edition 2024.
+Vorto is distributed as a single binary with no runtime dependencies. You can install it with [mise](https://mise.jdx.dev), from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. The Cargo and source paths require a Rust toolchain that supports edition 2024.
 
 <Note>
   A C compiler (such as `gcc` or `clang`) is required when building tree-sitter grammars after installation. The editor itself compiles and runs without one, but `vorto grammar install` will fail without it.
 </Note>
 
+## Install with mise
+
+[mise](https://mise.jdx.dev) can install Vorto directly from the GitHub repository and pin the version per project:
+
+```bash
+mise use github:shka-k/vorto
+```
+
+This installs the latest release and adds Vorto to the active mise environment so the `vorto` binary is on your `PATH`. Run the command inside a project directory to scope the version to that project, or pass `-g` to install it globally.
+
 ## Install from crates.io
 
-The fastest way to install Vorto is directly from crates.io:
+To install directly from crates.io with Cargo:
 
 ```bash
 cargo install vorto

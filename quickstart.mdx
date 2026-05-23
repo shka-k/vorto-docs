@@ -19,6 +19,31 @@ vorto .
 
 When you open a directory, Vorto sets it as the workspace root and immediately opens the fuzzy file picker so you can navigate to the file you want.
 
+## Install a grammar for syntax highlighting
+
+Vorto does not bundle compiled grammar libraries. Install the one for your language before you open that file type:
+
+```bash
+vorto grammar install rust
+```
+
+You can install multiple grammars at once, or install everything available:
+
+```bash
+vorto grammar install rust python typescript
+vorto grammar install --all
+```
+
+To see which grammars are available and which are already installed, run:
+
+```bash
+vorto grammar list
+```
+
+<Note>
+  A C compiler (`gcc` or `clang`) must be on your `PATH` when building grammars. The build happens once; subsequent editor starts load the cached library.
+</Note>
+
 ## Navigate in Normal mode
 
 Vorto starts in **Normal mode**. Use the following keys to move around without touching the mouse:
@@ -48,6 +73,18 @@ Vorto starts in **Normal mode**. Use the following keys to move around without t
   </Step>
 </Steps>
 
+## Read the git gutter
+
+Vorto shows VCS change indicators in the gutter (the narrow column to the left of the buffer):
+
+| Symbol | Meaning |
+|--------|---------|
+| `+` | Added line |
+| `~` | Modified line |
+| `-` | Deleted line |
+
+The gutter updates as you edit, giving you a live diff against the last commit.
+
 ## Save and quit
 
 From Normal mode, type `:` to enter Command mode. Then:
@@ -55,33 +92,13 @@ From Normal mode, type `:` to enter Command mode. Then:
 | Command | Action |
 |---------|--------|
 | `:w` | Save the current file |
+| `:e <path>` | Open another file by path |
 | `:q` | Quit Vorto |
 | `:wq` | Save and quit |
 
 <Warning>
   Vorto will not let you quit with unsaved changes. Run `:w` before `:q`, or use `:q!` to discard changes and force quit.
 </Warning>
-
-## Install a grammar for syntax highlighting
-
-Vorto does not bundle compiled grammar libraries. Install the one for your language before you open that file type:
-
-```bash
-vorto grammar install rust
-```
-
-You can install multiple grammars at once, or install everything available:
-
-```bash
-vorto grammar install rust python typescript
-vorto grammar install --all
-```
-
-To see which grammars are available and which are already installed, run:
-
-```bash
-vorto grammar list
-```
 
 ## Use the fuzzy finder
 
@@ -100,8 +117,8 @@ Inside the editor, the fuzzy finder lets you quickly open files, switch buffers,
   <Card title="Language grammars" icon="tree" href="/languages/grammars">
     Browse built-in grammar recipes and manage installed grammars.
   </Card>
-  <Card title="LSP client" icon="plug" href="/languages/lsp">
-    Connect a language server for completions, diagnostics, and goto definition.
+  <Card title="LSP setup" icon="plug" href="/lsp/setup">
+    Install a language server and enable diagnostics, completions, and goto definition.
   </Card>
   <Card title="Configuration" icon="sliders" href="/configuration/overview">
     Customize your keybindings, theme, and per-language settings in TOML.

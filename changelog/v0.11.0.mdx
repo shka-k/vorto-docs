@@ -1,0 +1,17 @@
+---
+title: "0.11.0"
+description: "vim-surround, gc/gb comment operators, richer text objects, and matching-pair highlights for quotes and angle brackets."
+---
+
+Released **May 23, 2026**.
+
+## New features
+
+- **vim-surround commands.** `ys{motion}{char}` adds, `cs{old}{new}` changes, and `ds{char}` deletes surrounding brackets or quotes. A which-key panel pops up after `ys`, `cs`, and `ds` so you don't need to memorise the surround character set. See [Keybindings](/editing/keybindings).
+- **`gc` / `gb` comment operators.** `gc{motion}` toggles line comments and `gb{motion}` toggles block comments. Both honour counts, text objects, and multi-cursor fan-out. The existing `Space c` shortcut still toggles the current line.
+- **More text objects.** Added `aW` / `iW` (WORD — whitespace-delimited), `` a` `` / `` i` `` (backtick string), `a<` / `i<` (angle bracket), and `at` / `it` (tree-sitter type) to the operator-pending object set.
+- **Tree-sitter text objects for 14 languages.** Ships `textobjects.scm` queries for the most common languages, so structural objects (functions, classes, parameters) work out of the box once the grammar is installed.
+
+## Updates
+
+- **Matching-pair highlight covers quotes and angle brackets.** The same highlight that marks the matching `(` / `[` / `{` now lights up matching `"`, `'`, `` ` ``, `<`, and `>` under the cursor.

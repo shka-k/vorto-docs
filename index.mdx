@@ -3,6 +3,11 @@ title: "Vorto: a Vim-style terminal editor that just works"
 description: "A Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — no plugin manager, no init.lua."
 ---
 
+<Frame>
+  <img src="/vorto.png" alt="Vorto" />
+  Vorto
+</Frame>
+
 Vorto is a Rust-based modal terminal editor that bundles an LSP client, tree-sitter syntax highlighting, and GitHub Copilot support (through the Copilot LSP). Grammars install on demand, and the entire configuration lives in a single TOML file — no plugin manager, no init.lua, no package.json.
 
 ## Why Vorto
@@ -17,68 +22,35 @@ Vorto is the response to that shift:
 - **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head. Pick it up faster; come back to it after a month without losing the muscle memory.
 - **One config file.** Keybindings, themes, indentation, and per-language settings all live in a single TOML file. Nothing to bootstrap, nothing to migrate.
 
+## Core concepts
+
+**Modal editing.** Five modes (Normal, Insert, Visual, Visual Line, Visual Block) plus a `:` command prompt. The status bar always shows the active mode. See [Editing modes](/editing/modes).
+
+**Language support.** Tree-sitter grammars install on demand via `vorto grammar install`. 27 languages ship with built-in recipes. See [Supported languages](/languages/supported-languages).
+
+**LSP client.** Diagnostics, completions, hover, code actions, and goto definition out of the box. Servers spawn lazily when you open a file. See [LSP overview](/lsp/overview).
+
+**Configuration.** A single TOML file at `~/.config/vorto/config.toml` controls editor settings, keymaps, languages, and LSP servers. See [Configuration overview](/configuration/overview).
+
+## Explore the docs
+
 <CardGroup cols={2}>
   <Card title="Installation" icon="download" href="/installation">
     Install Vorto from crates.io or build from source in minutes.
   </Card>
-  <Card title="Quick Start" icon="rocket" href="/quickstart">
+  <Card title="Quick start" icon="rocket" href="/quickstart">
     Open your first file, navigate in Normal mode, and start editing.
   </Card>
-  <Card title="Language Support" icon="code" href="/languages/grammars">
-    Install tree-sitter grammars and LSP servers for your languages.
+  <Card title="Editing modes" icon="keyboard" href="/editing/modes">
+    Understand Normal, Insert, Visual, and Command mode in depth.
+  </Card>
+  <Card title="Language grammars" icon="tree" href="/languages/grammars">
+    Install and manage tree-sitter grammars for syntax highlighting.
+  </Card>
+  <Card title="LSP client" icon="plug" href="/lsp/overview">
+    Connect language servers for completions, diagnostics, and more.
   </Card>
   <Card title="Configuration" icon="sliders" href="/configuration/overview">
-    Customize keybindings, themes, indentation, and language settings.
-  </Card>
-</CardGroup>
-
-## Get up and running
-
-<Steps>
-  <Step title="Install Vorto">
-    Install from crates.io with a single command:
-    ```bash
-    cargo install vorto
-    ```
-  </Step>
-  <Step title="Open a file or directory">
-    Launch Vorto with a file path or open a directory to start with the fuzzy file picker:
-    ```bash
-    vorto myfile.rs
-    # or open a project directory
-    vorto .
-    ```
-  </Step>
-  <Step title="Install language grammars">
-    Add syntax highlighting for your languages on demand:
-    ```bash
-    vorto grammar install rust python typescript
-    ```
-  </Step>
-  <Step title="Configure your editor">
-    Create `~/.config/vorto/config.toml` to set keybindings, themes, and language options.
-  </Step>
-</Steps>
-
-## Key features
-
-<CardGroup cols={2}>
-  <Card title="Modal editing" icon="keyboard" href="/editing/modes">
-    Normal, Insert, Visual, Visual-Line, and Visual-Block modes inspired by Vim.
-  </Card>
-  <Card title="Tree-sitter highlighting" icon="tree" href="/languages/grammars">
-    Precise, incremental syntax highlighting built from on-demand grammar installs.
-  </Card>
-  <Card title="LSP client" icon="plug" href="/languages/lsp">
-    Diagnostics, completions, hover docs, code actions, goto definition — and GitHub Copilot through the Copilot LSP.
-  </Card>
-  <Card title="Fuzzy finder" icon="magnifying-glass" href="/editing/commands">
-    Fast fuzzy search across files, open buffers, and symbols.
-  </Card>
-  <Card title="Customizable keymaps" icon="map" href="/configuration/keybindings">
-    Remap any key or add new bindings via TOML configuration.
-  </Card>
-  <Card title="Git integration" icon="code-branch" href="/guides/first-project">
-    VCS-aware gutter shows changed, added, and deleted lines at a glance.
+    Customize keybindings, themes, and language settings via TOML.
   </Card>
 </CardGroup>

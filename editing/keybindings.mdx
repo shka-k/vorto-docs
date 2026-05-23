@@ -3,7 +3,7 @@ title: "Vorto keybindings: complete default keymap reference"
 description: A complete reference of Vorto's default Normal-mode keybindings — navigation, editing, operators, Visual mode, leader keys, windows, and more.
 ---
 
-Vorto ships with a vim-style keymap out of the box. Every binding listed here is active in Normal mode unless noted otherwise. You can override any binding in your `config.toml` using `[[bind]]` entries — see the configuration documentation for details.
+Vorto ships with a vim-style keymap out of the box. Every binding listed here is active in Normal mode unless noted otherwise. You can override any binding in your `config.toml` using `[[bind]]` entries — see [Configure keybindings](/configuration/keybindings) for the syntax and full list of action names.
 
 ## Navigation
 
@@ -184,6 +184,7 @@ The leader key is `Space`. Press `Space` in Normal mode, then the second key:
 | `Space l` | Fuzzy search lines in the current buffer |
 | `Space /` | Fuzzy search across all workspace files |
 | `Space b` | Open the buffer picker |
+| `Space e` | Open the file tree explorer for the current workspace |
 | `Space d` | Open the diagnostics picker (current buffer) |
 | `Space D` | Open the diagnostics picker (entire workspace) |
 | `Space r` | Rename the symbol under the cursor (LSP) |

@@ -1,0 +1,20 @@
+---
+title: "0.9.6"
+description: "`:lsp` status modal, LSP server auto-shutdown, and several rendering fixes."
+---
+
+Released **May 19, 2026**.
+
+## New features
+
+- **`:lsp` status modal.** Run `:lsp` to see attached language servers, their status, and the workspace root for the current buffer. See [LSP](/lsp/overview).
+- **LSP auto-shutdown.** Language servers shut down automatically once no open buffer references them, freeing memory on long sessions.
+
+## Updates
+
+- **Status bar restyle.** The status bar background uses bright-black with edge padding for better contrast.
+
+## Bug fixes
+
+- Cursor and popup widths now account for fullwidth characters (CJK, emoji).
+- `rustfmt` receives the `--edition` value from your `Cargo.toml` instead of falling back to the default edition.
