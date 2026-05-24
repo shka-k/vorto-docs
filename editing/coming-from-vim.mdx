@@ -1,0 +1,55 @@
+---
+title: "Coming from Vim"
+description: "How your Vim muscle memory maps to Vorto — which motions, operators, and text objects work the same, what Vorto adds out of the box, and what isn't there yet."
+---
+
+Vorto follows Vim's modal grammar, so most of your muscle memory transfers directly. This page is the honest map: what works the same, what Vorto gives you for free that Vim needs a plugin for, and what isn't there yet. For the full keymap, see [Default keybindings](/editing/keybindings).
+
+## What works the same
+
+If you think in Vim's **operator + motion** grammar, it works here:
+
+| Category | Keys that carry over |
+|---|---|
+| **Counts** | `3w`, `2dd`, `5j` — counts prefix motions and operators |
+| **Operators** | `d`, `y`, `c`, `>`, `<`, doubled to act on a line (`dd`, `yy`) |
+| **Motions** | `h` `j` `k` `l`, `w` `b` `e` `W` `B` `E`, `0` `^` `$`, `gg` `G`, `H` `M` `L`, `{` `}`, `%`, `f` `F` `t` `T` `;` `,` |
+| **Text objects** | `iw` `aw`, `ip` `ap`, `i"` `a"`, `i(` `a(`, `i{` `a{`, `i[` `a[`, `it` `at` |
+| **Search** | `/`, `?`, `n`, `N`, `*`, `#` |
+| **Substitution** | `:s/pat/repl/`, `:%s/pat/repl/g` |
+| **Visual** | `v`, `V`, `Ctrl-V`, then operate on the selection |
+| **Insert entry** | `i` `a` `I` `A` `o` `O` `s` `S` `C` |
+| **Repeat** | `.` repeats the last change |
+| **Windows** | `Ctrl-W` splits and focus moves, plus `:split` / `:vsplit` |
+
+## What Vorto adds out of the box
+
+Things that need a plugin (or aren't possible) in stock Vim ship in the binary:
+
+- **Surround** — `ys{motion}{char}`, `cs{old}{new}`, `ds{char}`, with a which-key hint. No `vim-surround` to install. See [Keybindings](/editing/keybindings).
+- **Comment toggles** — `gc{motion}` for line comments and `gb{motion}` for block comments, count- and multi-cursor-aware.
+- **Multiple cursors** — `+` adds a cursor at the next match of the word under the cursor, `-` removes the last one.
+- **LSP, tree-sitter, fuzzy finding, file explorer, and Copilot** — all built in rather than assembled from plugins. See [Why Vorto](/why-vorto).
+- **Tree-sitter text objects** — `if` / `af` (function), `ic` / `ac` (class), `ia` / `aa` (argument) work once the grammar is installed.
+
+## Not in Vorto today
+
+These Vim features are not implemented yet. If your workflow leans on them, that's worth knowing before you switch:
+
+| Vim feature | Status in Vorto |
+|---|---|
+| Named registers (`"ay`, `"bp`) | One unnamed yank register only |
+| Macros (`qa…q`, `@a`) | Not available — `.` covers single-change repeats |
+| Marks (`ma`, `` `a ``) | Not available |
+| Code folding (`zf`, `za`) | Not available |
+| Jumplist (`Ctrl-o`, `Ctrl-i`) | Not available |
+
+## Intentionally different
+
+Some Vim conventions are left out on purpose, not pending:
+
+- **Config is TOML, not Vimscript.** Keybindings, options, and per-language settings live in one `~/.config/vorto/config.toml` file. There is no `init.vim`, no `:set` runtime command, and no autocmd system. See [Configuration overview](/configuration/overview).
+- **A focused set of `:` commands.** Vorto implements the everyday ex commands — file, buffer, window, search, and substitution — rather than the full ex language. See the [command reference](/editing/commands).
+- **`Ctrl-r` redo may need binding.** Redo is available as the `redo` action; bind it in config if it isn't already mapped.
+
+Ready to dig in? The [Default keybindings](/editing/keybindings) page lists every bound key, and [Editing modes](/editing/modes) covers the modal model in depth.

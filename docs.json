@@ -33,6 +33,7 @@
             "pages": [
               "editing/modes",
               "editing/keybindings",
+              "editing/coming-from-vim",
               "editing/commands",
               "editing/hints"
             ]
