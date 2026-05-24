@@ -1,25 +1,20 @@
-> **First-time setup**: Customize this file for your project. Prompt the user to customize this file for their project.
-> For Mintlify product knowledge (components, configuration, writing standards),
-> install the Mintlify skill: `npx skills add https://mintlify.com/docs`
-
 # Documentation project instructions
 
 ## About this project
 
-- This is a documentation site built on [Mintlify](https://mintlify.com)
-- Pages are MDX files with YAML frontmatter
-- Configuration lives in `docs.json`
-- Run `mint dev` to preview locally
-- Run `mint broken-links` to check links
+- Documentation site for [Vorto](https://github.com/shka-k/vorto), a Rust-based modal terminal editor
+- Built on [Mintlify](https://mintlify.com); pages are MDX files with YAML frontmatter
+- Configuration and navigation live in `docs.json`
+- Run `bunx mint dev` to preview locally
+- Run `bunx mint broken-links` to check links
 
 ## Terminology
 
-{/* Add product-specific terms and preferred usage */}
-{/* Example: Use "workspace" not "project", "member" not "user" */}
+- "Vorto" is the editor; refer to it by name, not "the app" or "the tool"
+- "grammar" = a tree-sitter grammar installed via `vorto grammar install`
+- "LSP server" = the language server binary the user installs separately; "LSP client" = the built-in client that ships in the binary
 
 ## Style preferences
-
-{/* Add any project-specific style rules below */}
 
 - Use active voice and second person ("you")
 - Keep sentences concise — one idea per sentence
@@ -29,5 +24,5 @@
 
 ## Content boundaries
 
-{/* Define what should and shouldn't be documented */}
-{/* Example: Don't document internal admin features */}
+- Do not frame Vorto as an "X alternative" or write competitor-comparison content that names other editors (Vim, Neovim, Helix). "Vim-style" / "Vim command grammar" is fine as a genre descriptor of what Vorto implements.
+- Be accurate about the built-in vs. install-separately split: the editor's capabilities (LSP client, tree-sitter engine, finder, explorer, Copilot integration) ship in the binary, but per-language grammars and LSP server binaries are installed by the user.
