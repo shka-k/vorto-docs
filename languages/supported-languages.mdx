@@ -3,7 +3,7 @@ title: "Built-in language support in Vorto: extensions and servers"
 description: "A reference of every language Vorto supports by default — file extensions, tree-sitter grammar recipe, built-in LSP server, and default formatter."
 ---
 
-Vorto ships with built-in definitions for 27 languages. Each definition covers the file extensions (and exact filenames where relevant) that map to the language, which tree-sitter grammar recipe is used, and any default LSP server or formatter. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
+Vorto ships with built-in definitions for 37 languages. Each definition covers the file extensions (and exact filenames where relevant) that map to the language, which tree-sitter grammar recipe is used, and any default LSP server or formatter. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
 
 ## Built-in language table
 
@@ -36,6 +36,16 @@ Vorto ships with built-in definitions for 27 languages. Each definition covers t
 | Diff | `.diff`, `.patch` | `diff` | — | — |
 | Vue | `.vue` | `vue` | `vue-language-server` | — |
 | Svelte | `.svelte` | `svelte` | `svelteserver` | — |
+| Haskell | `.hs` | `haskell` | `haskell-language-server-wrapper` | — |
+| Elixir | `.ex`, `.exs` | `elixir` | `lexical`, `elixir-ls` | — |
+| Nix | `.nix` | `nix` | `nixd`, `nil` | — |
+| C# | `.cs` | `c-sharp` | `csharp-ls` | — |
+| Swift | `.swift` | `swift` | `sourcekit-lsp` | — |
+| PHP | `.php` | `php` | `intelephense` | — |
+| Dart | `.dart` | `dart` | `dart` | `dart format` |
+| OCaml | `.ml`, `.mli` | `ocaml` | `ocamllsp` | `ocamlformat` |
+| GraphQL | `.graphql`, `.gql` | `graphql` | `graphql-lsp` | — |
+| Fish | `.fish` | `fish` | `fish-lsp` | `fish_indent` |
 
 ## Notes on specific languages
 
@@ -54,6 +64,12 @@ Vorto ships with built-in definitions for 27 languages. Each definition covers t
 **HCL** covers Terraform (`.tf`, `.tfvars`) and generic HCL configs (`.hcl`) through a single grammar. The `terraform-ls` server is attached by default.
 
 **Vue** and **Svelte** use HTML-style comment tokens (`<!--`) since the outermost layer of each single-file component is a template. Comments inside `<script>` blocks will be incorrect until grammar injection is wired up.
+
+**Elixir** and **Nix** each register two LSP servers — the preferred server is listed first, and the first binary found on `PATH` wins (the same pattern as TypeScript). Set `lsp = [...]` in `[languages.elixir]` or `[languages.nix]` to pin a specific server.
+
+**OCaml** uses a single language entry for both `.ml` and `.mli`. Files share `ocamllsp` and `ocamlformat`.
+
+**Swift** depends on `sourcekit-lsp`, which ships with the Swift toolchain — install Swift and the server is already on `PATH`.
 
 ## Installing grammars and LSP servers
 

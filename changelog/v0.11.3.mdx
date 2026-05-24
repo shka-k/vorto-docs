@@ -1,0 +1,20 @@
+---
+title: "0.11.3"
+description: "Ten new bundled languages, a configurable [finder] table for hidden patterns and the walker cap, and explorer toggles for hidden and gitignored files."
+---
+
+Released **May 24, 2026**.
+
+## New features
+
+- **Ten new bundled languages.** Added grammar recipes, vendored tree-sitter queries, and LSP defaults for **Haskell** (HLS), **Elixir** (lexical, with elixir-ls as fallback), **Nix** (nixd, with nil as fallback), **C#** (csharp-ls), **Swift** (sourcekit-lsp), **PHP** (intelephense), **Dart** (dart language-server, `dart format` formatter), **OCaml** (ocamllsp + ocamlformat), **GraphQL** (graphql-lsp), and **Fish** (fish-lsp, `fish_indent` formatter). See [Supported languages](/languages/supported-languages).
+- **Configurable `[finder]` table.** The hardcoded explorer and picker filter is now driven by config:
+
+  ```toml
+  [finder]
+  hidden_patterns = [".*", "node_modules", "target", "dist", "build"]
+  max_items = 50_000
+  ```
+
+  `hidden_patterns` accepts `*` wildcards and matches each path basename. `max_items` lifts the walker cap 10× by default (was 5,000) and can be pushed further — refilter stays under ~50 ms at 50k items in release builds.
+- **Explorer hidden / ignored toggles.** `.` flips visibility of paths matching `hidden_patterns`, and `h` flips the gitignore filter independently. With the two filters composing separately, revealing gitignored files no longer floods the walker with build artifacts.

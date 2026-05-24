@@ -1,0 +1,17 @@
+---
+title: "0.11.2"
+description: "File explorer opens in selection mode with create/delete/rename/move operations, surfaces empty directories, and gains a preview path header."
+---
+
+Released **May 24, 2026**.
+
+## New features
+
+- **Explorer selection mode by default.** `Space e` now opens in selection mode — `j` / `k` / `h` / `l` navigate the tree, `/` enters filter mode only when you ask for it. The filter input is hidden until active.
+- **In-tree file operations.** `a` creates, `d` deletes, `r` renames, and `m` moves the highlighted entry. Each operation opens a centered modal so the tree stays visible underneath. Rename and move rewrite the path across every buffer that referenced the source — active, parked, sleeping, MRU, and pane refs — so the next save lands at the new location.
+- **Empty directories are first-class.** The explorer now walks workspace directories alongside files, so empty folders show up in the tree and can be used as creation targets.
+- **Preview path header.** Both the explorer preview pane and the fuzzy picker (files, lines, locations, diagnostics, workspace, buffers) now show the full file path above the preview.
+
+## Updates
+
+- **Explorer scrolling.** The selected entry's parent row is pinned at column 0 only when the parent itself doesn't fit, and the viewport scrolls on both top and bottom edges instead of stranding the cursor at the last row.

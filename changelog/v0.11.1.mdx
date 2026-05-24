@@ -1,0 +1,17 @@
+---
+title: "0.11.1"
+description: "Multi-line Copilot ghost text, debounced re-fire, a centered signin modal, and small UI tweaks for tab markers and the extra cursor."
+---
+
+Released **May 23, 2026**.
+
+## New features
+
+- **Multi-line Copilot ghost text.** Inline completions now render every continuation line beneath the cursor, indented as Copilot returned them. Accepting with `Ctrl-l` (or the legacy `Ctrl-y`) inserts the suggestion verbatim instead of stacking auto-indent on each line. Server-side multi-line is still gated to JS/JSX, Python, and empty-block starts.
+- **Debounced re-fire.** Suggestions now schedule on a 75 ms deadline and surface wherever the cursor parks — after a motion, Backspace, Enter, paste, or simply entering Insert mode — not only after a keystroke. The previous LSP-popup lockout is gone, so ghost text and completion menus coexist.
+- **Signin modal.** Copilot signin now opens the verification URL in your OS browser and shows a centered modal with the user code that stays visible while you authenticate. A new `:copilot code` subcommand re-shows the modal and re-copies the code if it gets lost. See [LSP](/lsp/overview).
+
+## Updates
+
+- **Tab whitespace marker survives indent guides.** When `show_whitespace = true`, a `→` arrow that collides with an indent guide is now emitted on the next free cell of the same tab instead of being silently hidden. See [`show_whitespace`](/configuration/editor-settings#show_whitespace).
+- **Extra-cursor cell uses ANSI yellow.** Stacked cursors are now painted with ANSI yellow on black so they stay visible when layered over a selection or a search hit.
