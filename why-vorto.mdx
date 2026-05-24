@@ -1,59 +1,34 @@
 ---
 title: "Why Vorto"
-description: "Vorto as a Vim, Neovim, and Helix alternative — a batteries-included Rust modal terminal editor with built-in LSP, tree-sitter, and Copilot, configured from one TOML file. Head-to-head comparison and when to pick each."
+description: "The philosophy behind Vorto: a batteries-included Rust modal terminal editor with built-in LSP, tree-sitter, and Copilot, configured from one TOML file — designed for how people actually work with AI today."
 ---
 
-If you've been looking for a Vim-style editor that doesn't make you maintain a 2,000-line `init.lua`, or a Neovim-class setup that ships with LSP, tree-sitter, and Copilot out of the box, Vorto is built for exactly that workload. This page lays out the philosophy and the trade-offs honestly so you can decide whether to switch.
+Vorto exists because the way we use editors has changed but modal editing has only become more relevant. This page lays out the philosophy behind the design choices so you can decide whether it fits how you work.
 
-## A Vim for the AI era
+## A modal editor for the AI era
 
-Vorto's design starts from a single observation: **the way we use editors has changed, but modal editing has only become more relevant.**
+Vorto's design starts from a single observation: **the workload has shifted, and modal editing has shifted with it — toward being more useful, not less.**
 
-In an AI-assisted workflow, humans write less code by hand than ever before. The day-to-day job is shifting away from typing new functions and toward reading diffs, reviewing generated code, jumping between call sites, and making small surgical edits — the exact workload Vim's command grammar was designed for. `ci"`, `daf`, `>ap`, `gn` — these compose as cleanly over Copilot output as they ever did over your own.
+In an AI-assisted workflow, humans write less code by hand than ever before. The day-to-day job is shifting away from typing new functions and toward reading diffs, reviewing generated code, jumping between call sites, and making small surgical edits — the exact workload Vim-style command grammar was designed for. `ci"`, `daf`, `>ap`, `gn` — these compose as cleanly over Copilot output as they ever did over your own.
 
-What has stopped being worth it is **the editor itself as a project**. Curating a plugin list, pinning versions, debugging a broken `init.lua` after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted loop that also includes a coding agent, a terminal, a browser, and a review tool. Time spent tuning an editor config is time not spent shipping.
+What has stopped being worth it is **the editor itself as a project**. Curating a plugin list, pinning versions, debugging a broken config after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted loop that also includes a coding agent, a terminal, a browser, and a review tool. Time spent tuning an editor config is time not spent shipping.
 
-Vorto's philosophy follows from that:
+## Design tenets
 
-- **Modal grammar, not modal mystique.** Vim's keys are the interface — operators, motions, text objects, counts. We keep that surface intact and skip the parts (Vimscript, autocmds, `:set` archaeology) that exist for historical reasons rather than for the user.
-- **The editor should be done.** LSP, tree-sitter, fuzzy finder, file explorer, Copilot — these aren't optional plugins, they're table stakes in 2026. They ship in the binary, they update with the binary, and they don't break when something else upgrades.
+Vorto's philosophy follows from that observation:
+
+- **Modal grammar, not modal mystique.** The keys are the interface — operators, motions, text objects, counts. We keep that surface intact and skip the parts (Vimscript, autocmds, `:set` archaeology) that exist for historical reasons rather than for the user.
+- **The editor should be done.** LSP, tree-sitter, fuzzy finder, file explorer, Copilot — these aren't optional plugins, they're modern editing basics. They ship in the binary, they update with the binary, and they don't break when something else upgrades.
 - **One config file, one binary, one mental model.** You should be able to read your own config a year later without remembering which plugin owns which keybinding. A single TOML file and a single static Rust binary make that possible.
 - **Reach for AI without leaving the keyboard.** GitHub Copilot is built in, not bolted on — multi-line ghost text, accept with `Ctrl-l`, signin handled from inside the editor. AI assistance becomes another motion in the modal flow, not a context switch.
 
+## What that means in practice
+
+- **No plugin manager.** Nothing to install, nothing to pin, nothing to babysit. Upgrades and rollbacks are one command each.
+- **No version skew.** The LSP client, the tree-sitter runtime, the syntax queries, and the editor itself are all the same binary — they can't disagree about a breaking change.
+- **Everything in one TOML file.** Keybindings, themes, indentation, per-language settings, and LSP overrides live in `~/.config/vorto/config.toml`. See [Configuration overview](/configuration/overview).
+- **Built-in workflow tools.** [Fuzzy file picker](/editing/commands), [file tree explorer](/editing/keybindings), inline [command hints](/editing/hints), and a [Copilot ghost text loop](/lsp/overview) are part of the default install.
+
 The shorthand version: **Vorto is a Vim-style modal editor designed for how people actually work with AI in 2026** — keep the grammar, drop the maintenance tax, treat AI as a first-class peer.
-
-## What Vorto gives you
-
-- **Batteries included.** LSP client, tree-sitter highlighting, fuzzy finder, file explorer, and GitHub Copilot all ship in the binary. `cargo install vorto` and start editing.
-- **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head.
-- **One TOML file.** Keybindings, themes, indentation, and per-language settings all live in `~/.config/vorto/config.toml`. Nothing to bootstrap, nothing to migrate.
-- **Written in Rust.** Single static binary, startup under 50 ms on a cold cache, no runtime to install.
-
-## Vorto vs Vim, Neovim, and Helix
-
-| | Vim | Neovim | Helix | **Vorto** |
-|---|---|---|---|---|
-| **Modal model** | Vim | Vim | Kakoune (selection-first) | **Vim** |
-| **Out-of-box LSP** | Plugin required | Built-in client, manual server config | Built-in | **Built-in** |
-| **Tree-sitter** | Plugin | Built-in, manual install per language | Built-in | **Built-in, on-demand install** |
-| **GitHub Copilot** | Plugin | Plugin | Manual LSP wiring | **Built-in** |
-| **Config language** | Vimscript | Lua + Vimscript | TOML | **TOML, single file** |
-| **Plugin manager** | Required (vim-plug, etc.) | Required (lazy.nvim, etc.) | None | **None** |
-| **Language** | C | C | Rust | **Rust** |
-| **Cold startup** | ~10 ms | ~50–200 ms with plugins | ~30 ms | **~30 ms** |
-
-## When to pick which
-
-**Pick Vim or Neovim if** you already have a tuned config and enjoy maintaining it, or you need a specific plugin ecosystem (DAP debugging, org-mode, niche tree-sitter integrations). Vorto deliberately doesn't have a plugin system — that's a feature, but it does cap what's possible.
-
-**Pick Helix if** you prefer the Kakoune-style **selection → action** model over Vim's **operator → motion** grammar. Helix and Vorto are very close on the "batteries included" axis; the deciding factor is usually muscle memory.
-
-**Pick Vorto if** you want Vim's modal grammar, a single TOML file instead of an `init.lua`, and Copilot working the moment the editor opens — without curating a plugin list or babysitting it across upgrades.
-
-## Migrating from Vim or Neovim
-
-- **Keybindings.** The defaults are vim-compatible. See [Default keybindings](/editing/keybindings) for the full keymap, or override anything via `[[bind]]` entries — see [Configure keybindings](/configuration/keybindings).
-- **LSP servers.** You bring the server binaries (`rust-analyzer`, `pyright`, etc.); Vorto attaches them automatically for the 37 [supported languages](/languages/supported-languages). Add custom servers under `[lsp.<name>]`.
-- **Tree-sitter grammars.** Install on demand with `vorto grammar install <lang>` — no separate parser repo to clone.
 
 Ready to try it? Head to [Installation](/installation) or jump straight to the [Quick start](/quickstart).

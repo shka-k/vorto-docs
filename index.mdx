@@ -1,6 +1,6 @@
 ---
 title: "Vorto: a Vim-style terminal editor that just works"
-description: "Vorto is a batteries-included Vim/Neovim alternative: a Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — configured from one TOML file, no plugin manager, no init.lua."
+description: "A batteries-included Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — configured from one TOML file, no plugin manager, no init script."
 ---
 
 <Frame>
@@ -8,13 +8,15 @@ description: "Vorto is a batteries-included Vim/Neovim alternative: a Rust-based
   Vorto
 </Frame>
 
-Vorto is a Rust-based modal terminal editor and a modern **Vim alternative** for people who want Vim's command grammar without curating an `init.lua` or a plugin manager. It bundles an LSP client, tree-sitter syntax highlighting, a fuzzy finder, a file explorer, and GitHub Copilot support — all in a single static binary, configured from one TOML file.
+Vorto is a Rust-based modal terminal editor for people who want Vim's command grammar without curating an init script or a plugin list. It bundles an LSP client, a tree-sitter highlighting engine, a fuzzy finder, a file explorer, and GitHub Copilot support — all in a single static binary, configured from one TOML file.
 
-If you're shopping for a **Vim or Neovim alternative**, see [Why Vorto](/why-vorto) for a head-to-head comparison with Vim, Neovim, and Helix.
+**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically with `cargo install vorto`.
+
+For the philosophy behind these choices, see [Why Vorto](/why-vorto).
 
 ## Highlights
 
-- **Batteries included.** LSP client, tree-sitter highlighting, fuzzy finder, and GitHub Copilot all ship in the binary. Install once with `cargo install vorto` and start editing — no plugin manager, no `init.lua`, no `package.json`.
+- **Batteries included.** The LSP client, tree-sitter engine, fuzzy finder, file explorer, and Copilot integration all ship in the binary — no plugin manager, no init script, no `package.json`. Each language's grammar and LSP server install once with a single command, and Vorto wires them up automatically.
 - **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head. Pick it up faster; come back to it after a month without losing the muscle memory.
 - **One config file.** Keybindings, themes, indentation, and per-language settings all live in a single TOML file. Nothing to bootstrap, nothing to migrate.
 
@@ -32,7 +34,7 @@ If you're shopping for a **Vim or Neovim alternative**, see [Why Vorto](/why-vor
 
 <CardGroup cols={2}>
   <Card title="Why Vorto" icon="circle-question" href="/why-vorto">
-    How Vorto compares to Vim, Neovim, and Helix — and when to pick each.
+    The philosophy behind Vorto's batteries-included, single-binary design.
   </Card>
   <Card title="Installation" icon="download" href="/installation">
     Install Vorto from crates.io or build from source in minutes.
