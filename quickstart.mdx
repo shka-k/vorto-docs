@@ -3,7 +3,7 @@ title: "Vorto quick start: open a file and make your first edit"
 description: "Open a file or directory, navigate in Normal mode, make your first edit, save your work, and install a tree-sitter grammar to enable syntax highlighting."
 ---
 
-This page walks you through the essential workflow in Vorto: opening a file, moving around in Normal mode, switching to Insert mode to type, saving your changes, and installing a grammar for syntax highlighting. By the end you will have everything you need for everyday editing.
+This page walks you through the essential workflow in Vorto: opening a file, moving around in Normal mode, switching to Insert mode to type, and saving your changes. Editing works the moment you open a file; turning on syntax highlighting and language servers is an optional, one-time-per-language step we cover at the end.
 
 ## Open a file or directory
 
@@ -19,30 +19,7 @@ vorto .
 
 When you open a directory, Vorto sets it as the workspace root and immediately opens the fuzzy file picker so you can navigate to the file you want.
 
-## Install a grammar for syntax highlighting
-
-Vorto does not bundle compiled grammar libraries. Install the one for your language before you open that file type:
-
-```bash
-vorto grammar install rust
-```
-
-You can install multiple grammars at once, or install everything available:
-
-```bash
-vorto grammar install rust python typescript
-vorto grammar install --all
-```
-
-To see which grammars are available and which are already installed, run:
-
-```bash
-vorto grammar list
-```
-
-<Note>
-  A C compiler (`gcc` or `clang`) must be on your `PATH` when building grammars. The build happens once; subsequent editor starts load the cached library.
-</Note>
+You can edit, navigate, and save without any further setup — syntax highlighting and language servers are an optional, one-time-per-language step covered [below](#enable-syntax-highlighting).
 
 ## Navigate in Normal mode
 
@@ -107,6 +84,35 @@ Inside the editor, the fuzzy finder lets you quickly open files, switch buffers,
 <Note>
   The fuzzy finder searches files relative to the workspace root — the directory you passed when launching Vorto, or your working directory if you opened a file directly.
 </Note>
+
+## Enable syntax highlighting
+
+Everything above works on a plain, uncolored buffer. To turn on syntax highlighting for a language, install its tree-sitter grammar once — Vorto does not bundle compiled grammar libraries:
+
+```bash
+vorto grammar install rust
+```
+
+You can install multiple grammars at once, or install everything available:
+
+```bash
+vorto grammar install rust python typescript
+vorto grammar install --all
+```
+
+To see which grammars are available and which are already installed, run:
+
+```bash
+vorto grammar list
+```
+
+This is a one-time step per language; once built, the grammar is cached and loaded on every subsequent start.
+
+<Note>
+  A C compiler (`gcc` or `clang`) must be on your `PATH` when building grammars. The build happens once; subsequent editor starts load the cached library.
+</Note>
+
+For diagnostics, completions, and goto definition, install a language server for your language and Vorto attaches it automatically — see [LSP setup](/lsp/setup). Like grammars, this is a one-time per-language setup, and editing works fine without it.
 
 ## Next steps
 
