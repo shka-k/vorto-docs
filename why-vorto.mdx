@@ -1,15 +1,26 @@
 ---
-title: "Why Vorto: a modern Vim alternative for the AI era"
-description: "How Vorto compares to Vim, Neovim, and Helix — a batteries-included, Rust-based modal terminal editor with built-in LSP, tree-sitter, and Copilot, configured from one TOML file."
+title: "Why Vorto"
+description: "Vorto as a Vim, Neovim, and Helix alternative — a batteries-included Rust modal terminal editor with built-in LSP, tree-sitter, and Copilot, configured from one TOML file. Head-to-head comparison and when to pick each."
 ---
 
-If you've been looking for a **Vim alternative** that doesn't make you maintain a 2,000-line `init.lua`, or a **Neovim alternative** that ships with LSP, tree-sitter, and Copilot out of the box, Vorto is built for exactly that workload. This page lays out the trade-offs honestly so you can decide whether to switch.
+If you've been looking for a Vim-style editor that doesn't make you maintain a 2,000-line `init.lua`, or a Neovim-class setup that ships with LSP, tree-sitter, and Copilot out of the box, Vorto is built for exactly that workload. This page lays out the philosophy and the trade-offs honestly so you can decide whether to switch.
 
-## The shift that motivates Vorto
+## A Vim for the AI era
 
-In the AI era, humans write less code by hand than ever before. Most of what we still do in an editor is read, review, and surgically edit — the exact workload modal editing was built for. Vim's command grammar is as relevant as it has ever been.
+Vorto's design starts from a single observation: **the way we use editors has changed, but modal editing has only become more relevant.**
 
-What has stopped being worth it is the editor itself. Curating a plugin list, pinning versions, debugging a broken `init.lua` after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted workflow.
+In an AI-assisted workflow, humans write less code by hand than ever before. The day-to-day job is shifting away from typing new functions and toward reading diffs, reviewing generated code, jumping between call sites, and making small surgical edits — the exact workload Vim's command grammar was designed for. `ci"`, `daf`, `>ap`, `gn` — these compose as cleanly over Copilot output as they ever did over your own.
+
+What has stopped being worth it is **the editor itself as a project**. Curating a plugin list, pinning versions, debugging a broken `init.lua` after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted loop that also includes a coding agent, a terminal, a browser, and a review tool. Time spent tuning an editor config is time not spent shipping.
+
+Vorto's philosophy follows from that:
+
+- **Modal grammar, not modal mystique.** Vim's keys are the interface — operators, motions, text objects, counts. We keep that surface intact and skip the parts (Vimscript, autocmds, `:set` archaeology) that exist for historical reasons rather than for the user.
+- **The editor should be done.** LSP, tree-sitter, fuzzy finder, file explorer, Copilot — these aren't optional plugins, they're table stakes in 2026. They ship in the binary, they update with the binary, and they don't break when something else upgrades.
+- **One config file, one binary, one mental model.** You should be able to read your own config a year later without remembering which plugin owns which keybinding. A single TOML file and a single static Rust binary make that possible.
+- **Reach for AI without leaving the keyboard.** GitHub Copilot is built in, not bolted on — multi-line ghost text, accept with `Ctrl-l`, signin handled from inside the editor. AI assistance becomes another motion in the modal flow, not a context switch.
+
+The shorthand version: **Vorto is a Vim-style modal editor designed for how people actually work with AI in 2026** — keep the grammar, drop the maintenance tax, treat AI as a first-class peer.
 
 ## What Vorto gives you
 
