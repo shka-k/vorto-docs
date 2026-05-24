@@ -1,6 +1,6 @@
 ---
-title: "Vorto: a Vim-style terminal editor that just works"
-description: "A Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — no plugin manager, no init.lua."
+title: "Vorto: a modern Vim alternative — modal terminal editor in Rust"
+description: "Vorto is a batteries-included Vim/Neovim alternative: a Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — configured from one TOML file, no plugin manager, no init.lua."
 ---
 
 <Frame>
@@ -8,15 +8,11 @@ description: "A Rust-based modal terminal text editor with built-in LSP, tree-si
   Vorto
 </Frame>
 
-Vorto is a Rust-based modal terminal editor that bundles an LSP client, tree-sitter syntax highlighting, and GitHub Copilot support (through the Copilot LSP). Grammars install on demand, and the entire configuration lives in a single TOML file — no plugin manager, no init.lua, no package.json.
+Vorto is a Rust-based modal terminal editor and a modern **Vim alternative** for people who want Vim's command grammar without curating an `init.lua` or a plugin manager. It bundles an LSP client, tree-sitter syntax highlighting, a fuzzy finder, a file explorer, and GitHub Copilot support — all in a single static binary, configured from one TOML file.
 
-## Why Vorto
+If you're shopping for a **Vim or Neovim alternative**, see [Why Vorto](/why-vorto) for a head-to-head comparison with Vim, Neovim, and Helix.
 
-In the AI era, humans write less code by hand than ever before. Most of what we still do in an editor is read, review, and surgically edit — the exact workload modal editing was built for. Vim's command grammar is as relevant as it has ever been.
-
-What has stopped being worth it is the editor itself. Curating a plugin list, pinning versions, debugging a broken `init.lua` after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted workflow.
-
-Vorto is the response to that shift:
+## Highlights
 
 - **Batteries included.** LSP client, tree-sitter highlighting, fuzzy finder, and GitHub Copilot all ship in the binary. Install once with `cargo install vorto` and start editing — no plugin manager, no `init.lua`, no `package.json`.
 - **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head. Pick it up faster; come back to it after a month without losing the muscle memory.
@@ -26,7 +22,7 @@ Vorto is the response to that shift:
 
 **Modal editing.** Five modes (Normal, Insert, Visual, Visual Line, Visual Block) plus a `:` command prompt. The status bar always shows the active mode. See [Editing modes](/editing/modes).
 
-**Language support.** Tree-sitter grammars install on demand via `vorto grammar install`. 27 languages ship with built-in recipes. See [Supported languages](/languages/supported-languages).
+**Language support.** Tree-sitter grammars install on demand via `vorto grammar install`. 37 languages ship with built-in recipes. See [Supported languages](/languages/supported-languages).
 
 **LSP client.** Diagnostics, completions, hover, code actions, and goto definition out of the box. Servers spawn lazily when you open a file. See [LSP overview](/lsp/overview).
 
@@ -35,6 +31,9 @@ Vorto is the response to that shift:
 ## Explore the docs
 
 <CardGroup cols={2}>
+  <Card title="Why Vorto" icon="circle-question" href="/why-vorto">
+    How Vorto compares to Vim, Neovim, and Helix — and when to pick each.
+  </Card>
   <Card title="Installation" icon="download" href="/installation">
     Install Vorto from crates.io or build from source in minutes.
   </Card>

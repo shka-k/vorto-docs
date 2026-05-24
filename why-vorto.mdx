@@ -1,0 +1,48 @@
+---
+title: "Why Vorto: a modern Vim alternative for the AI era"
+description: "How Vorto compares to Vim, Neovim, and Helix — a batteries-included, Rust-based modal terminal editor with built-in LSP, tree-sitter, and Copilot, configured from one TOML file."
+---
+
+If you've been looking for a **Vim alternative** that doesn't make you maintain a 2,000-line `init.lua`, or a **Neovim alternative** that ships with LSP, tree-sitter, and Copilot out of the box, Vorto is built for exactly that workload. This page lays out the trade-offs honestly so you can decide whether to switch.
+
+## The shift that motivates Vorto
+
+In the AI era, humans write less code by hand than ever before. Most of what we still do in an editor is read, review, and surgically edit — the exact workload modal editing was built for. Vim's command grammar is as relevant as it has ever been.
+
+What has stopped being worth it is the editor itself. Curating a plugin list, pinning versions, debugging a broken `init.lua` after an upgrade, wiring up LSP and tree-sitter and a completion engine by hand — that maintenance tax made sense when the editor was where you spent your day. It does not make sense when the editor is one tool among many in an AI-assisted workflow.
+
+## What Vorto gives you
+
+- **Batteries included.** LSP client, tree-sitter highlighting, fuzzy finder, file explorer, and GitHub Copilot all ship in the binary. `cargo install vorto` and start editing.
+- **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head.
+- **One TOML file.** Keybindings, themes, indentation, and per-language settings all live in `~/.config/vorto/config.toml`. Nothing to bootstrap, nothing to migrate.
+- **Written in Rust.** Single static binary, startup under 50 ms on a cold cache, no runtime to install.
+
+## Vorto vs Vim, Neovim, and Helix
+
+| | Vim | Neovim | Helix | **Vorto** |
+|---|---|---|---|---|
+| **Modal model** | Vim | Vim | Kakoune (selection-first) | **Vim** |
+| **Out-of-box LSP** | Plugin required | Built-in client, manual server config | Built-in | **Built-in** |
+| **Tree-sitter** | Plugin | Built-in, manual install per language | Built-in | **Built-in, on-demand install** |
+| **GitHub Copilot** | Plugin | Plugin | Manual LSP wiring | **Built-in** |
+| **Config language** | Vimscript | Lua + Vimscript | TOML | **TOML, single file** |
+| **Plugin manager** | Required (vim-plug, etc.) | Required (lazy.nvim, etc.) | None | **None** |
+| **Language** | C | C | Rust | **Rust** |
+| **Cold startup** | ~10 ms | ~50–200 ms with plugins | ~30 ms | **~30 ms** |
+
+## When to pick which
+
+**Pick Vim or Neovim if** you already have a tuned config and enjoy maintaining it, or you need a specific plugin ecosystem (DAP debugging, org-mode, niche tree-sitter integrations). Vorto deliberately doesn't have a plugin system — that's a feature, but it does cap what's possible.
+
+**Pick Helix if** you prefer the Kakoune-style **selection → action** model over Vim's **operator → motion** grammar. Helix and Vorto are very close on the "batteries included" axis; the deciding factor is usually muscle memory.
+
+**Pick Vorto if** you want Vim's modal grammar, a single TOML file instead of an `init.lua`, and Copilot working the moment the editor opens — without curating a plugin list or babysitting it across upgrades.
+
+## Migrating from Vim or Neovim
+
+- **Keybindings.** The defaults are vim-compatible. See [Default keybindings](/editing/keybindings) for the full keymap, or override anything via `[[bind]]` entries — see [Configure keybindings](/configuration/keybindings).
+- **LSP servers.** You bring the server binaries (`rust-analyzer`, `pyright`, etc.); Vorto attaches them automatically for the 37 [supported languages](/languages/supported-languages). Add custom servers under `[lsp.<name>]`.
+- **Tree-sitter grammars.** Install on demand with `vorto grammar install <lang>` — no separate parser repo to clone.
+
+Ready to try it? Head to [Installation](/installation) or jump straight to the [Quick start](/quickstart).

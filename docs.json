@@ -23,6 +23,7 @@
             "group": "Get Started",
             "pages": [
               "index",
+              "why-vorto",
               "installation",
               "quickstart"
             ]
