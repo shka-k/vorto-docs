@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "name": "Vorto",
   "theme": "palm",
-  "favicon": "/vorto.ico",
+  "favicon": "/favicon.ico",
   "colors": {
     "primary": "#4A7FA5",
     "light": "#EAF2FB",
