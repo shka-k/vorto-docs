@@ -35,7 +35,8 @@
               "editing/keybindings",
               "editing/coming-from-vim",
               "editing/commands",
-              "editing/hints"
+              "editing/hints",
+              "editing/copilot"
             ]
           },
           {

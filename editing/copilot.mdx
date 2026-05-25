@@ -1,0 +1,106 @@
+---
+title: "GitHub Copilot in Vorto: inline ghost-text completions"
+sidebarTitle: "Copilot"
+description: "Set up GitHub Copilot in Vorto — install copilot-language-server, sign in with the device flow, and accept multi-line inline ghost-text suggestions with Ctrl-l."
+---
+
+Vorto ships with a built-in GitHub Copilot client. When it is available, Copilot offers **inline ghost text** — greyed-out suggestions that appear ahead of your cursor in Insert mode and that you accept with a single keystroke. It is wired into the same input loop as everything else, so reaching for a suggestion is just another motion rather than a context switch.
+
+Copilot is entirely optional. Vorto talks to it through the official `copilot-language-server` binary, which is **not bundled and never installed automatically** — by design, the editor stays out of your package-manager loop. If the binary isn't present, Vorto degrades silently: no errors, no prompts, and every other feature keeps working. You just don't see ghost text.
+
+## Prerequisites
+
+<Steps>
+  <Step title="A GitHub account with Copilot access">
+    Inline completions are served by GitHub Copilot, so you need an account with an active Copilot entitlement. Vorto does not provide a plan of its own — it relies on your existing GitHub Copilot access.
+  </Step>
+  <Step title="The copilot-language-server binary on your PATH">
+    Vorto looks for an executable named `copilot-language-server` on your `PATH`. It is the official GitHub-published language server, distributed as an npm package. Any install method works as long as the binary ends up on your `PATH`, for example:
+
+    ```bash
+    npm install -g @github/copilot-language-server
+    ```
+
+    Verify it resolves:
+
+    ```bash
+    copilot-language-server --version
+    ```
+  </Step>
+</Steps>
+
+<Note>
+  Vorto runs a single workspace-wide Copilot instance and connects to it over standard LSP (stdio). There is no per-language setup — once the binary is on your `PATH` and you're signed in, it applies across every buffer.
+</Note>
+
+## Sign in
+
+Copilot uses GitHub's device-flow sign-in. Start it from the command prompt:
+
+```
+:copilot signin
+```
+
+(`:copilot login` is an alias.) Vorto then:
+
+1. Copies a one-time **user code** to your clipboard.
+2. Opens the verification URL (`https://github.com/login/device`) in your OS browser.
+3. Shows a centered modal with the user code and URL so you can confirm the device even if the browser didn't open.
+
+Paste the code into the GitHub page and authorize. Vorto holds the confirmation in the background, so the editor stays fully interactive while you finish in the browser — the status updates on its own once GitHub approves the device.
+
+<Tip>
+  If you dismiss the modal or your clipboard gets overwritten before you finish, run `:copilot code` to re-show the modal and re-copy the user code for the in-flight sign-in.
+</Tip>
+
+### Managing your session
+
+| Command | Action |
+|---------|--------|
+| `:copilot status` | Show the current auth state (signed in as *user*, not signed in, not authorized, or not running). Bare `:copilot` defaults to this. |
+| `:copilot signin` | Start the device-flow sign-in. Alias: `:copilot login`. |
+| `:copilot signout` | Sign out of Copilot. Alias: `:copilot logout`. |
+| `:copilot code` | Re-show the sign-in modal and re-copy the user code for an in-flight sign-in. |
+
+You can also confirm Copilot's state at a glance in the `:lsp` status modal, where it is listed alongside your language servers.
+
+## Use ghost text
+
+Once you're signed in, suggestions appear automatically as you edit in Insert mode. There is nothing to trigger by hand — Vorto requests a completion on a short **75 ms debounce** and surfaces the result wherever your cursor comes to rest: after a motion, `Backspace`, `Enter`, a paste, or simply entering Insert mode. Ghost text and the LSP completion popup coexist; the suggestion paints underneath the popup rather than fighting it.
+
+### Accept a suggestion
+
+| Key | Action |
+|-----|--------|
+| `Ctrl-l` | Accept the showing suggestion and insert it verbatim |
+| `Ctrl-y` | Same as `Ctrl-l` (kept for muscle-memory parity) |
+
+Accepting inserts the suggestion exactly as Copilot returned it, including any indentation on continuation lines.
+
+### Multi-line suggestions
+
+Suggestions can span multiple lines; Vorto renders each continuation line beneath the cursor, indented as Copilot returned it. Server-side multi-line generation is currently scoped to **JavaScript / JSX, Python, and empty-block starts** — elsewhere you'll typically get a single-line completion.
+
+### Dismiss a suggestion
+
+There is no dedicated reject key. A suggestion is only valid while your cursor sits exactly where it was requested, so **moving the cursor, editing the buffer, or leaving Insert mode clears the ghost text**. If a suggestion isn't what you want, just keep typing — it disappears on its own and a fresh request fires when you pause.
+
+## Enable and disable
+
+Copilot has no on/off switch in `config.toml`. Whether it's active comes down to two things:
+
+- **Is `copilot-language-server` on your `PATH`?** If not, the client never starts and you get no ghost text — with no error.
+- **Are you signed in?** Run `:copilot status` to check, and `:copilot signin` / `:copilot signout` to change it.
+
+To turn Copilot off for a session, sign out; to disable it entirely, remove the binary from your `PATH`.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="LSP" icon="plug" href="/lsp/overview">
+    How Vorto's language-server client works — diagnostics, completions, and goto definition that complement Copilot's suggestions.
+  </Card>
+  <Card title="Editing modes" icon="keyboard" href="/editing/modes">
+    The modal grammar that ghost text plugs into — accept a suggestion, then reshape it with motions and operators.
+  </Card>
+</CardGroup>
