@@ -67,6 +67,16 @@ The prompt supports Tab completion for command names and, where applicable, for 
 | `:lsp` | Show the LSP status panel for the current buffer |
 | `:lsp all` | Show the LSP status panel for every configured language |
 
+### Grammars
+
+| Command | Description |
+|---------|-------------|
+| `:grammar` | Open the grammar install modal (alias `:grammar list`) |
+| `:grammar install <name>… \| --all` | Install grammars without leaving the editor |
+| `:grammar remove <name>…` | Remove installed grammars |
+
+In the modal, `j` / `k` move the selection, `Enter` installs, and `d` removes. Installs run in the background and re-highlight the active buffer on completion, so colors appear without a restart. See [Install and manage grammars](/languages/grammars#installing-grammars-from-the-editor).
+
 ### Utilities
 
 | Command | Description |

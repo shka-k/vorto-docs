@@ -64,7 +64,7 @@ root_markers = [".git"]
     ```
 
     <Note>
-      Custom grammars must be installed manually. Only the languages listed in `vorto grammar list` have built-in recipes; for anything else you'll need to build the grammar library yourself and place it in the grammar directory (shown in the output of `vorto grammar list`).
+      If the language has a built-in recipe (check `vorto grammar list`), that's all you need. For a grammar outside the built-in catalog, add a `[grammars.<name>]` recipe so `vorto grammar install` can build it — see [Grammars outside the built-in catalog](/languages/grammars#grammars-outside-the-built-in-catalog). You can still install a prebuilt library by hand instead, dropping it in the grammar directory shown by `vorto grammar list`.
     </Note>
   </Step>
 

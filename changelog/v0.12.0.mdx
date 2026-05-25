@@ -1,0 +1,17 @@
+---
+title: "0.12.0"
+description: "Grammar management moves into the editor with a :grammar command and an install-on-open prompt, grammars now compile in-process so a C compiler is the only build requirement, and [grammars.<name>] config recipes install languages beyond the built-in catalog."
+---
+
+Released **May 25, 2026**.
+
+## New features
+
+- **In-editor grammar management.** A new `:grammar` command brings the `vorto grammar` CLI into the editor. `:grammar` (or `:grammar list`) opens an interactive modal listing every recipe with its install status — `j`/`k` move, `Enter` installs the selected grammar, `d` removes it, and the modal stays open across installs. `:grammar install <name>… | --all` and `:grammar remove <name>…` also work inline. Installs run on a worker thread, and the active buffer re-highlights on completion with no restart. The command shows up in the which-key hint panel and Tab completion.
+- **Install on open.** Opening a file whose language has an install recipe but whose grammar isn't on disk now shows a yes/no **install this grammar?** prompt instead of a highlight-failed error. Press `y` or `Enter` to install; the buffer lights up when the install finishes. Each grammar is asked about at most once per session, so opening more files of the same language stays quiet.
+- **Custom `[grammars.<name>]` recipes.** You can now define grammars outside the built-in catalog in `config.toml`, so `vorto grammar install <name>` works for them too. Each recipe takes a `source` git URL (alias `src`), an optional `rev` to pin a tag, branch, or commit, and an optional `subpath` for grammars that live inside a monorepo. Queries for custom grammars are user-supplied, since only built-ins carry bundled `.scm` files.
+
+## Improvements
+
+- **In-process grammar compilation.** Grammars now compile in-process via the `cc` crate instead of shelling out to `tree-sitter build`, so a C compiler is the only hard build requirement. The `tree-sitter` CLI is now a fallback used only for the rare grammar that ships no pre-generated `parser.c` and must be generated from `grammar.js`. Grammars that ship only `parser.c` build without a C++ toolchain — a C++ compiler is required only when the grammar includes a `scanner.cc` / `scanner.cpp`.
+- **`vorto grammar list` grouped by status.** The list now groups grammars by install status and adds a **custom (from config)** section for `[grammars.*]` recipes. Pass `-v` for the detailed per-grammar view.

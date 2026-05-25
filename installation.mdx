@@ -6,7 +6,7 @@ description: "Install Vorto with mise, from crates.io with Cargo, or build from 
 Vorto is distributed as a single static binary. You can install it with [mise](https://mise.jdx.dev), from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. The Cargo and source paths require a Rust toolchain that supports edition 2024.
 
 <Note>
-  A C compiler (such as `gcc` or `clang`) is required when building tree-sitter grammars after installation. The editor itself compiles and runs without one, but `vorto grammar install` will fail without it.
+  A C compiler (such as `gcc` or `clang`) is required when building tree-sitter grammars after installation. The editor itself compiles and runs without one, but `vorto grammar install` will fail without it. See [Installing a C compiler](/troubleshooting#installing-a-c-compiler) for per-OS instructions.
 </Note>
 
 ## Install with mise
@@ -67,7 +67,7 @@ Run the following command to confirm Vorto is installed and accessible:
 vorto --version
 ```
 
-You should see output like `vorto 0.11.4`. If the command is not found, check that the install directory is included in your `PATH`.
+You should see output like `vorto 0.12.0`. If the command is not found, check that the install directory is included in your `PATH`.
 
 ## Next steps
 

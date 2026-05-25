@@ -39,10 +39,14 @@ This page covers the most common issues encountered when running Vorto, grouped 
     clang --version
     ```
 
-    If the compiler is missing, install it through your system package manager and then re-run `vorto grammar install`.
+    If the compiler is missing, [install one](#installing-a-c-compiler) and then re-run `vorto grammar install`.
+
+    **Install from inside the editor**
+
+    You can also install the grammar without leaving Vorto — run `:grammar` to open the install modal, or accept the **install this grammar?** prompt when you open the file. Grammars installed this way re-highlight the open buffer immediately, with no restart.
 
     <Note>
-      After installing a grammar, restart Vorto so it can load the newly compiled library.
+      After installing a grammar from the command line, restart Vorto so it can load the newly compiled library.
     </Note>
   </Accordion>
 
@@ -98,7 +102,7 @@ This page covers the most common issues encountered when running Vorto, grouped 
     clang --version
     ```
 
-    Install one through your system package manager if neither is found.
+    If neither is found, [install a C compiler](#installing-a-c-compiler) and retry.
 
     **Remove a broken install and retry**
 
@@ -193,3 +197,45 @@ This page covers the most common issues encountered when running Vorto, grouped 
     Compare the logged sequence with the binding you expect to be active and adjust your `[[bind]]` entries in `config.toml` accordingly.
   </Accordion>
 </AccordionGroup>
+
+## Installing a C compiler
+
+Building a grammar compiles a C source file in-process, so `clang` or `gcc` must be on your `PATH`. If you installed Vorto with `cargo install` or from source, you already have one — the Rust toolchain needs it to link. If you installed a prebuilt binary, you may need to add a compiler before `vorto grammar install` works.
+
+<Tabs>
+  <Tab title="macOS">
+    Install the Xcode Command Line Tools, which include `clang`:
+
+    ```sh
+    xcode-select --install
+    ```
+  </Tab>
+  <Tab title="Debian / Ubuntu">
+    ```sh
+    sudo apt install build-essential
+    ```
+
+    `build-essential` pulls in `gcc` and `g++` (the latter is needed only for grammars with a C++ scanner).
+  </Tab>
+  <Tab title="Fedora / RHEL">
+    ```sh
+    sudo dnf install gcc gcc-c++
+    ```
+  </Tab>
+  <Tab title="Arch">
+    ```sh
+    sudo pacman -S base-devel
+    ```
+  </Tab>
+  <Tab title="Windows">
+    Install the [Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/) and select the **Desktop development with C++** workload. Vorto builds grammars with the MSVC toolchain.
+  </Tab>
+</Tabs>
+
+Confirm the compiler is reachable, then re-run the install:
+
+```sh
+clang --version
+# or
+gcc --version
+```

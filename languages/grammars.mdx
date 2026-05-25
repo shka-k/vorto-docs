@@ -1,18 +1,9 @@
 ---
 title: "Install and manage tree-sitter grammars in Vorto"
-description: "Learn how to build and install tree-sitter grammar libraries for syntax highlighting in Vorto, manage query files, and remove grammars you no longer need."
+description: "Install and manage tree-sitter grammars in Vorto from the CLI or the in-editor :grammar command, add custom [grammars.<name>] recipes for languages outside the built-in catalog, and manage query files."
 ---
 
-Vorto uses [tree-sitter](https://tree-sitter.github.io) for syntax highlighting, but it does not bundle compiled grammar libraries. Instead, you install only the languages you need using the `vorto grammar` subcommand. Each grammar is fetched from its upstream Git repository and compiled into a shared library that Vorto loads at startup.
-
-## Prerequisites
-
-<Warning>
-  Two tools must be on your `PATH` before you can build grammars:
-  - **`tree-sitter` CLI** — install with `cargo install tree-sitter-cli` or `npm install -g tree-sitter-cli`
-  - **`git`** — used to fetch grammar source repositories when no pre-built release tarball is available
-  - **A C compiler** (`gcc` or `clang`) — invoked by `tree-sitter build` to compile the parser
-</Warning>
+Vorto uses [tree-sitter](https://tree-sitter.github.io) for syntax highlighting, but it does not bundle compiled grammar libraries. Instead, you install only the languages you need — from the command line with the `vorto grammar` subcommand, or from inside the editor with the [`:grammar` command](#installing-grammars-from-the-editor). Each grammar is fetched from its upstream Git repository and compiled into a shared library that Vorto loads at startup.
 
 ## Where grammars are stored
 
@@ -33,7 +24,11 @@ Both paths are printed at the top of `vorto grammar list` output so you always k
 vorto grammar list
 ```
 
-Prints every built-in recipe along with its install status. For each language, you see whether the compiled library is present and which query files are installed or only bundled (vendored inside the Vorto binary but not yet written to disk).
+Prints every recipe grouped by install status, so you can see at a glance what's installed, what has a library but is missing queries, and what isn't installed yet. Custom recipes you've defined under `[grammars.*]` appear in their own **custom (from config)** section. For a detailed per-language breakdown — whether the compiled library is present and which query files are installed or only bundled (vendored inside the Vorto binary but not yet written to disk) — pass `-v`:
+
+```bash
+vorto grammar list -v
+```
 
 ### Install grammars
 
@@ -47,9 +42,13 @@ vorto grammar install rust python
 vorto grammar install --all
 ```
 
-Vorto fetches the grammar source, compiles it with the `tree-sitter` CLI, and places the resulting library in `~/.config/vorto/grammars/`. It also writes the vendored query files to `~/.config/vorto/queries/<lang>/`. Grammars that are already fully installed are skipped automatically.
+Vorto fetches the grammar source, compiles it in-process, and places the resulting library in `~/.config/vorto/grammars/`. It also writes the vendored query files to `~/.config/vorto/queries/<lang>/`. Grammars that are already fully installed are skipped automatically.
 
 Multiple grammars are built in parallel, capped at your CPU count, so `--all` completes faster on multi-core machines.
+
+<Note>
+  Compilation happens in-process, so a C compiler (`clang` or `gcc`) needs to be on your `PATH` — if you installed Vorto with `cargo` or from source, you already have one. Should an install fail, see [Installing a C compiler](/troubleshooting#installing-a-c-compiler). (`git` fetches sources when no release tarball is published, and the `tree-sitter` CLI is only used as a fallback for the rare grammar that ships no pre-generated `parser.c`.)
+</Note>
 
 <Note>
   `install` also accepts the alias `add`: `vorto grammar add rust`.
@@ -83,6 +82,31 @@ Deletes the installed shared library for the named grammar from `~/.config/vorto
   `remove` also accepts the aliases `rm` and `uninstall`.
 </Note>
 
+## Installing grammars from the editor
+
+You don't have to drop to a shell to manage grammars. Run `:grammar` (or `:grammar list`) from the command prompt to open an interactive modal listing every recipe with its install status:
+
+| Key | Action |
+|-----|--------|
+| `j` / `k` | Move the selection |
+| `Enter` | Install the selected grammar |
+| `d` | Remove the selected grammar |
+| `Esc` | Close the modal |
+
+The modal stays open across installs, which run on a background thread. When an install finishes, the active buffer re-highlights automatically — no restart needed. You can also install or remove grammars inline:
+
+```
+:grammar install rust python
+:grammar install --all
+:grammar remove rust
+```
+
+The `:grammar` command appears in the which-key hint panel and supports Tab completion for its subcommands.
+
+### Install on open
+
+When you open a file whose language has an install recipe but whose grammar isn't on disk, Vorto shows a yes/no **install this grammar?** prompt instead of a highlight-failed error. Press `y` or `Enter` to install — the buffer lights up once the install completes. Anything else dismisses the prompt and the file opens as plain text. Each grammar is asked about at most once per session, so opening more files of the same language stays quiet.
+
 ## How queries work
 
 Tree-sitter queries are `.scm` files that tell the highlighter how to map syntax nodes to highlight groups. Vorto ships a vendored set of queries for every built-in grammar. When you run `vorto grammar install`, those files are written to `~/.config/vorto/queries/<lang>/` alongside the compiled library.
@@ -97,6 +121,31 @@ The query files Vorto uses include:
 
 You can replace any of these files with your own by overwriting them in the query directory. Run `vorto grammar install-queries <lang>` to restore the vendored versions.
 
-## Installing grammars manually
+## Grammars outside the built-in catalog
 
-For languages without a built-in recipe, you can install a grammar manually by dropping its compiled shared library directly into `~/.config/vorto/grammars/` and placing your query files in `~/.config/vorto/queries/<lang>/`. The filename stem must match the language name in your `config.toml`.
+For languages without a built-in recipe, you have two options.
+
+### Define a recipe in config
+
+Add a `[grammars.<name>]` block to your `config.toml` and `vorto grammar install <name>` — and the in-editor `:grammar` command — will build it just like a built-in:
+
+```toml
+[grammars.nim]
+source  = "https://github.com/alaviss/tree-sitter-nim"
+rev     = "abc123"   # optional: pin a tag, branch, or commit
+subpath = "sub"      # optional: for a grammar inside a monorepo
+```
+
+| Field | Description |
+|-------|-------------|
+| `source` | Git URL of the grammar repository (alias: `src`). Required. |
+| `rev` | Tag, branch, or commit to pin. Omit to build the latest default branch. |
+| `subpath` | Directory within the repository that holds the grammar, for monorepos that ship several. |
+
+<Note>
+  Custom recipes build the library, but Vorto has no vendored queries for them — only built-ins ship bundled `.scm` files. Supply your own query files in `~/.config/vorto/queries/<name>/` so highlighting has something to map against.
+</Note>
+
+### Install the library by hand
+
+You can also skip recipes entirely: drop a compiled shared library directly into `~/.config/vorto/grammars/` and place your query files in `~/.config/vorto/queries/<lang>/`. The filename stem must match the language name in your `config.toml`.
