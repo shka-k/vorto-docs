@@ -1,0 +1,11 @@
+---
+title: "0.12.1"
+description: "The :grammar list modal gains a / filter to narrow the catalog as you type, and the install-on-open prompt becomes a navigable Yes/No dialog."
+---
+
+Released **May 25, 2026**.
+
+## Improvements
+
+- **Filter the `:grammar` modal.** Press `/` in the grammar list to filter the catalog as you type — the list narrows to grammars whose name contains what you've typed (case-insensitive). `Enter` installs the highlighted match and leaves the filter input with the query still in effect; `Esc` peels back one step at a time — out of the filter input, then clearing the query, then closing the modal. The arrow keys and `Ctrl-N`/`Ctrl-P` move the selection whether or not you're filtering. The key hint now lists `/ filter`.
+- **Navigable install-on-open prompt.** The **install this grammar?** prompt you get when opening a file with a missing grammar is now a Yes/No dialog. `y`/`n` still decide directly, and you can move between the buttons with the arrow keys (or `h`/`l`/`Tab`) and confirm the highlight with `Enter`. It opens on **Yes**, so a bare `Enter` still installs as before.

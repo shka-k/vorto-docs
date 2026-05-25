@@ -88,12 +88,17 @@ You don't have to drop to a shell to manage grammars. Run `:grammar` (or `:gramm
 
 | Key | Action |
 |-----|--------|
-| `j` / `k` | Move the selection |
+| `j` / `k` | Move the selection (the arrow keys and `Ctrl-N` / `Ctrl-P` work too) |
 | `Enter` | Install the selected grammar |
 | `d` | Remove the selected grammar |
+| `/` | Filter the list as you type |
 | `Esc` | Close the modal |
 
-The modal stays open across installs, which run on a background thread. When an install finishes, the active buffer re-highlights automatically — no restart needed. You can also install or remove grammars inline:
+The modal stays open across installs, which run on a background thread. When an install finishes, the active buffer re-highlights automatically — no restart needed.
+
+To find a grammar in a long list, press `/` and start typing — the list narrows to grammars whose name contains what you've typed (case-insensitive). `Enter` installs the highlighted match and leaves the filter input with the query still applied. `Esc` peels back one step at a time: out of the filter input, then clearing the query, then closing the modal.
+
+You can also install or remove grammars inline:
 
 ```
 :grammar install rust python
@@ -105,7 +110,7 @@ The `:grammar` command appears in the which-key hint panel and supports Tab comp
 
 ### Install on open
 
-When you open a file whose language has an install recipe but whose grammar isn't on disk, Vorto shows a yes/no **install this grammar?** prompt instead of a highlight-failed error. Press `y` or `Enter` to install — the buffer lights up once the install completes. Anything else dismisses the prompt and the file opens as plain text. Each grammar is asked about at most once per session, so opening more files of the same language stays quiet.
+When you open a file whose language has an install recipe but whose grammar isn't on disk, Vorto shows a **install this grammar?** prompt instead of a highlight-failed error. Press `y` to install — the buffer lights up once the install completes — or `n` to dismiss and open the file as plain text. You can also move between the **Yes** and **No** buttons with the arrow keys (or `h` / `l` / `Tab`) and confirm the highlighted one with `Enter`; the prompt opens on **Yes**, so a bare `Enter` installs. Each grammar is asked about at most once per session, so opening more files of the same language stays quiet.
 
 ## How queries work
 
