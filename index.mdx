@@ -14,6 +14,30 @@ Vorto is a Rust-based modal terminal editor for people who want Vim's command gr
 
 For the philosophy behind these choices, see [Why Vorto](/why-vorto).
 
+## Install
+
+Vorto is a single static binary. Install it from [crates.io](https://crates.io/crates/vorto) with Cargo or with [mise](https://mise.jdx.dev):
+
+<CodeGroup>
+
+```bash Cargo
+cargo install vorto
+```
+
+```bash mise
+mise use github:vorto-editor/vorto
+```
+
+</CodeGroup>
+
+Then confirm the binary is on your `PATH`:
+
+```bash
+vorto --version
+```
+
+That's enough to open your first file. For building from source and other options, see [Installation](/installation); to start editing, head to the [Quick start](/quickstart).
+
 ## Highlights
 
 - **Batteries included.** The LSP client, tree-sitter engine, fuzzy finder, file explorer, and Copilot integration all ship in the binary — no plugin manager, no init script, no `package.json`. Each language's grammar and LSP server install once with a single command, and Vorto wires them up automatically.

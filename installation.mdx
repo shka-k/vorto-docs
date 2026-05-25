@@ -3,7 +3,7 @@ title: "Install Vorto with mise, Cargo, or from source"
 description: "Install Vorto with mise, from crates.io with Cargo, or build from source with Make or Cargo. Verify the binary before opening your first file."
 ---
 
-Vorto is distributed as a single binary with no runtime dependencies. You can install it with [mise](https://mise.jdx.dev), from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. The Cargo and source paths require a Rust toolchain that supports edition 2024.
+Vorto is distributed as a single static binary. You can install it with [mise](https://mise.jdx.dev), from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. The Cargo and source paths require a Rust toolchain that supports edition 2024.
 
 <Note>
   A C compiler (such as `gcc` or `clang`) is required when building tree-sitter grammars after installation. The editor itself compiles and runs without one, but `vorto grammar install` will fail without it.
@@ -69,6 +69,13 @@ vorto --version
 
 You should see output like `vorto 0.11.3`. If the command is not found, check that the install directory is included in your `PATH`.
 
+## Next steps
+
+Vorto does not bundle tree-sitter grammars or language servers, so two more steps turn on the full experience for a language:
+
+- **Syntax highlighting** — install the tree-sitter grammar for the language you use first, e.g. `vorto grammar install rust`. See [Install and manage grammars](/languages/grammars) for the build prerequisites.
+- **LSP features** — install the matching language server and make sure its binary is on your `PATH`. See [Set up LSP support](/lsp/setup).
+
 <Tip>
-  Once Vorto is installed, run `vorto grammar install rust` (or whichever language you use first) to set up syntax highlighting before you open your first file.
+  Install the grammar before you open your first file so syntax highlighting is on from the start.
 </Tip>
