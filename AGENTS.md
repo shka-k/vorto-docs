@@ -2,7 +2,7 @@
 
 ## About this project
 
-- Documentation site for [Vorto](https://github.com/shka-k/vorto), a Rust-based modal terminal editor
+- Documentation site for [Vorto](https://github.com/vorto-editor/vorto), a Rust-based modal terminal editor
 - Built on [Mintlify](https://mintlify.com); pages are MDX files with YAML frontmatter
 - Configuration and navigation live in `docs.json`
 - Run `bunx mint dev` to preview locally

@@ -1,6 +1,6 @@
 # Vorto documentation
 
-Source for the [Vorto](https://github.com/shka-k/vorto) documentation site, built with [Mintlify](https://mintlify.com).
+Source for the [Vorto](https://github.com/vorto-editor/vorto) documentation site, built with [Mintlify](https://mintlify.com).
 
 Vorto is a Rust-based modal terminal editor with a built-in LSP client, tree-sitter highlighting, fuzzy finder, file explorer, and GitHub Copilot support — configured from a single TOML file.
 
