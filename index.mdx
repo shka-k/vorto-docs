@@ -1,16 +1,15 @@
 ---
 title: "Vorto: a Vim-style terminal editor that just works"
-description: "A batteries-included Rust-based modal terminal text editor with built-in LSP, tree-sitter highlighting, and GitHub Copilot — configured from one TOML file, no plugin manager, no init script."
+description: "Vorto is a batteries-included, Vim-style modal terminal editor for the AI era — built-in LSP, tree-sitter highlighting, and GitHub Copilot in a single Rust binary, configured from one TOML file with no plugin manager or init script."
 ---
 
 <Frame>
   <img src="/vorto.png" alt="Vorto" />
-  Vorto
 </Frame>
 
-Vorto is a Rust-based modal terminal editor for people who want Vim's command grammar without curating an init script or a plugin list. It bundles an LSP client, a tree-sitter highlighting engine, a fuzzy finder, a file explorer, and GitHub Copilot support — all in a single static binary, configured from one TOML file.
+## The editor should be done
 
-**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically with `cargo install vorto`.
+**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically with `cargo install vorto`. And in an AI-assisted workflow — where the editor is one tool alongside a coding agent, a terminal, and a review loop — the hours that plugin upkeep used to justify are better spent shipping.
 
 For the philosophy behind these choices, see [Why Vorto](/why-vorto).
 
