@@ -1,0 +1,12 @@
+---
+title: "0.11.4"
+description: "Syntax highlighting now scales to large files — per-frame highlight cost tracks the visible viewport instead of the whole document, and the first paint no longer waits on git."
+---
+
+Released **May 24, 2026**.
+
+## Updates
+
+- **Viewport-limited highlighting.** The highlight and indent queries now run only against the visible row window instead of walking the whole syntax tree every frame. Editing or scrolling one frame of a 100k-line file drops from ~14.8 ms to ~62 µs in release builds.
+- **Memoized redraws.** Captures are cached per document version and visible range, so pure redraws — cursor moves, mode changes, toast expiry — skip the highlight query entirely (~1.2 µs). Injected sub-language blocks (for example, fenced code in Markdown) are cached by region content instead of being re-parsed each frame.
+- **Off-thread git baseline.** The `HEAD` blob lookup that powers the gutter diff moved off the file-open path onto a worker thread, so opening a file no longer blocks the first paint on git subprocesses — the diff markers fill in a frame later.
