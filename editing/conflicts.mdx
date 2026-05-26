@@ -1,0 +1,85 @@
+---
+title: "Vorto conflict resolution and auto-reload"
+sidebarTitle: "Conflicts & reload"
+description: "Highlight and resolve git conflict markers with :conflict and ]c / [c, and control how Vorto reacts when a file changes on disk with the autoreload setting — replace, three-way merge, or off."
+---
+
+When a file you're editing also changes outside the editor — a formatter rewrites it, an agent edits it, `git checkout` swaps branches, or another tool touches it — Vorto helps in two ways: it reacts to the change on disk (auto-reload), and it highlights and resolves any conflict markers that result.
+
+## Conflict markers
+
+Vorto recognizes standard git conflict blocks and highlights them, layered under your syntax colors:
+
+```
+<<<<<<< HEAD
+ours
+=======
+theirs
+>>>>>>> branch
+```
+
+Each marker line (`<<<<<<<`, `=======`, `>>>>>>>`, and the diff3 base marker `|||||||`) gets a colored bar, and the "ours" and "theirs" sides each get a dim tint so the two halves are easy to tell apart at a glance. This works on conflicts produced by git **and** on the markers that `autoreload = "merge"` writes (see below).
+
+### Navigate between conflicts
+
+| Key | Action |
+|-----|--------|
+| `]c` | Jump to the next conflict marker |
+| `[c` | Jump to the previous conflict marker |
+
+### Resolve a conflict
+
+Put the cursor inside a conflict and run `:conflict` with the side you want to keep. The whole block is replaced in a single, **undoable** edit:
+
+| Command | Result |
+|---------|--------|
+| `:conflict ours` | Keep the top side, drop the rest |
+| `:conflict theirs` | Keep the bottom side, drop the rest |
+| `:conflict both` | Keep both sides, drop only the markers |
+| `:conflict none` | Delete the whole conflict block |
+
+The subcommands carry aliases that match how you think about the conflict: `ours` also accepts `local` / `top`, `theirs` also accepts `disk` / `bottom`, `both` accepts `all`, and `none` accepts `remove`.
+
+## Auto-reload
+
+When the active buffer's backing file changes on disk, Vorto reacts according to the `autoreload` setting in `[editor]`. It accepts three modes:
+
+| Mode | Behavior |
+|------|----------|
+| `"replace"` *(default)* | Prompt to reload the buffer. If the buffer has unsaved edits, the prompt warns that reloading replaces them (you can still undo with `u`). Declining suppresses re-prompts until the file changes again. |
+| `"merge"` | Follow the external edit via a three-way merge instead of prompting. A clean buffer reloads silently; a buffer with unsaved edits is merged, and any spots where both sides touched the same lines are written inline with `<<<<<<<` / `=======` / `>>>>>>>` markers (labeled `local (your edits)` vs `disk`). The result is undoable. |
+| `"none"` | Disable the watcher entirely. Pick up changes manually with `:reload`. |
+
+```toml
+[editor]
+autoreload = "merge"
+```
+
+The setting can be overridden per language — set `autoreload` inside a `[languages.<name>]` table to use a different mode for that language. For backward compatibility, the legacy boolean form still works: `autoreload = true` maps to `"replace"` and `autoreload = false` maps to `"none"`.
+
+### Reload manually
+
+Regardless of the mode, you can always reload from disk on demand:
+
+| Command | Aliases | Action |
+|---------|---------|--------|
+| `:reload` | `:e!` | Reload the current buffer from disk (undo restores the pre-reload state) |
+| `:reload-all` | | Reload every file-backed buffer from disk |
+
+<Tip>
+  `autoreload = "merge"` and the `:conflict` resolver pair up: when a merge
+  leaves conflict markers, navigate them with `]c` / `[c` and resolve each with
+  `:conflict ours` / `theirs` / `both` / `none`, exactly as you would a git
+  conflict.
+</Tip>
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="Editor settings" icon="sliders" href="/configuration/editor-settings">
+    The `[editor]` reference, including `autoreload`.
+  </Card>
+  <Card title="Commands" icon="terminal" href="/editing/commands">
+    The `:` command reference, including `:conflict` and `:reload`.
+  </Card>
+</CardGroup>

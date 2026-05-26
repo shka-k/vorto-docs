@@ -40,9 +40,15 @@ The prompt supports Tab completion for command names and, where applicable, for 
 
 ### Navigation
 
-| Command | Description |
-|---------|-------------|
-| `:goto <n>` | Jump to line `n` |
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:goto <n>` | | Jump to line `n` |
+| `:jumps` | | Open the jump history picker |
+| `:bookmarks` | `:bm` | Open the bookmark picker (same as `:bookmarks list`) |
+| `:bookmarks add` | `:bm add` | Bookmark the current buffer at the cursor |
+| `:bookmarks delete` | `:bm delete` | Remove the current buffer's bookmark |
+
+`:bookmarks` is the command form of the `Space m` bookmark sub-leader, and `:jumps` mirrors `Space j`. See [Jumps & bookmarks](/editing/navigation).
 
 ### Window / split management
 
@@ -61,6 +67,17 @@ The prompt supports Tab completion for command names and, where applicable, for 
 | `:%s/pat/repl/` | | Substitute `pat` with `repl` across the whole buffer |
 | `:%s/pat/repl/g` | | Substitute all occurrences on every line |
 
+### Git conflicts
+
+| Command | Description |
+|---------|-------------|
+| `:conflict ours` | Resolve the conflict at the cursor, keeping the top (ours / local) side |
+| `:conflict theirs` | Resolve it keeping the bottom (theirs / disk) side |
+| `:conflict both` | Keep both sides, dropping only the markers |
+| `:conflict none` | Delete the whole conflict block |
+
+Navigate between conflicts with `]c` / `[c`. See [Conflicts & reload](/editing/conflicts).
+
 ### LSP and diagnostics
 
 | Command | Description |
@@ -77,6 +94,26 @@ The prompt supports Tab completion for command names and, where applicable, for 
 | `:grammar remove <name>…` | Remove installed grammars |
 
 In the modal, `j` / `k` move the selection, `Enter` installs, `d` removes, and `/` filters the list as you type. Installs run in the background and re-highlight the active buffer on completion, so colors appear without a restart. See [Install and manage grammars](/languages/grammars#installing-grammars-from-the-editor).
+
+### AI agents
+
+| Command | Description |
+|---------|-------------|
+| `:agent` | Launch the default AI agent in a built-in pane (opens a picker the first time); re-running focuses the existing pane |
+| `:agent explain @file` | Launch or focus the agent with a prompt to explain the active buffer |
+| `:agent chat @file` | Launch or focus the agent with an open-ended prompt about the active buffer |
+| `:agent explain @selection` | Same, scoped to the visual selection (select first, then press `:`) |
+| `:agent chat @selection` | Same, scoped to the visual selection |
+
+The agent runs under a pseudo-terminal inside Vorto. While its pane is focused, every key goes to the agent except `Ctrl-W`, which moves window focus (`Ctrl-W h/j/k/l/w`). See [AI agents](/editing/agent).
+
+### Theming
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:theme` | `:colorscheme`, `:colo` | Open the theme picker with live preview |
+
+The picker previews each theme on the current buffer as you move the cursor; `Enter` applies and persists it to `config.toml`, `Esc` reverts. See [Themes](/configuration/themes).
 
 ### Utilities
 
@@ -134,3 +171,11 @@ The diagnostics picker lists LSP errors, warnings, and hints. Selecting an entry
 ### References picker
 
 The references picker opens automatically when you run `gr` (find references) in Normal mode or use `gd` / `gD` / `gi` for LSP navigation when multiple results are returned. It uses the same picker interface as the other fuzzy finders.
+
+### Jump history picker
+
+Open with `Space j` in Normal mode, or run `:jumps`. The picker lists the per-pane jumplist — the positions you jumped from — most recent first. Selecting an entry jumps back to it. See [Jumps & bookmarks](/editing/navigation#jumplist).
+
+### Bookmark picker
+
+Open with `Space m m` in Normal mode, or run `:bookmarks` / `:bm`. The picker lists your bookmarks for the current project; selecting one jumps to it. See [Jumps & bookmarks](/editing/navigation#bookmarks).

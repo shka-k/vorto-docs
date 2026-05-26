@@ -35,8 +35,11 @@
               "editing/keybindings",
               "editing/coming-from-vim",
               "editing/commands",
+              "editing/navigation",
+              "editing/conflicts",
               "editing/hints",
-              "editing/copilot"
+              "editing/copilot",
+              "editing/agent"
             ]
           },
           {
@@ -59,6 +62,7 @@
             "pages": [
               "configuration/overview",
               "configuration/editor-settings",
+              "configuration/themes",
               "configuration/keybindings",
               "configuration/languages",
               "configuration/lsp-servers"
@@ -78,6 +82,7 @@
           {
             "group": "Releases",
             "pages": [
+              "changelog/v0.13.0",
               "changelog/v0.12.1",
               "changelog/v0.12.0",
               "changelog/v0.11.4",

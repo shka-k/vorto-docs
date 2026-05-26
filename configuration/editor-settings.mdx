@@ -43,6 +43,27 @@ When `true`, spaces and tabs in the buffer are rendered with visible marker glyp
 
 When `true`, Vorto runs the formatter before writing the file to disk. It uses the external formatter command configured for the language (`formatter.command`), or falls back to `textDocument/formatting` against the first attached LSP if no external formatter is configured. Set to `false` to disable all automatic formatting on save.
 
+### `autoreload`
+
+**Type:** string (or boolean)  
+**Default:** `"replace"`  
+**Values:** `"replace"`, `"merge"`, `"none"`
+
+Controls how Vorto reacts when the active buffer's backing file changes on disk:
+
+- `"replace"` — prompt to reload the buffer; if it has unsaved edits the prompt warns that reloading replaces them (undo with `u`).
+- `"merge"` — follow the external edit via a three-way merge, writing `<<<<<<<` / `=======` / `>>>>>>>` conflict markers only where both sides touched the same lines.
+- `"none"` — disable the watcher; reload manually with `:reload`.
+
+The legacy boolean form still works: `true` maps to `"replace"` and `false` maps to `"none"`. See [Conflicts & reload](/editing/conflicts#auto-reload) for the full behavior.
+
+### `theme`
+
+**Type:** string  
+**Default:** unset (Vorto's built-in default colors)
+
+The name of the active color theme — a built-in name such as `"catppuccin-mocha"` or the basename of a file in `~/.config/vorto/themes/`. The `:theme` picker writes this key for you when you apply a theme. See [Themes](/configuration/themes).
+
 ### `indent_guides`
 
 **Type:** boolean  
@@ -98,6 +119,8 @@ tab_width = 4
 use_tabs = false
 show_whitespace = false
 format_on_save = true
+autoreload = "replace"
+theme = "catppuccin-mocha"
 indent_guides = true
 indent_guides_skip_levels = 0
 indent_guide_style = "line"

@@ -1,0 +1,119 @@
+---
+title: "Vorto themes: the :theme picker and TOML color themes"
+sidebarTitle: "Themes"
+description: "Switch themes live with the :theme picker, write your own TOML color themes with a flat scope-to-color map and an optional palette, and pick from the built-in catalog."
+---
+
+Vorto's colors come from a theme — a TOML file that maps highlight scopes and editor chrome to colors. A handful of themes ship in the binary, you can drop your own into the config directory, and you can switch between them live with the `:theme` picker. The active theme persists to `config.toml`, so it survives restarts.
+
+## Switch themes with `:theme`
+
+Run `:theme` from the command prompt (aliases: `:colorscheme`, `:colo`). This opens a filterable picker over every theme — built-ins plus anything in your `themes/` directory:
+
+| Key | Action |
+|-----|--------|
+| Any character | Filter the list by name |
+| `j` / `↓` / `Ctrl-n` | Move the selection down |
+| `k` / `↑` / `Ctrl-p` | Move the selection up |
+| `Enter` | Apply the selected theme and save it to `config.toml` |
+| `Esc` | Revert to the theme you started with |
+
+As you move the cursor through the list, the highlighted theme previews **live on the current buffer**, so you see real code in real colors before committing. Pressing `Enter` writes `theme = "<name>"` into `config.toml`; pressing `Esc` restores the theme that was active when you opened the picker.
+
+To set the startup theme without the picker, add the key directly:
+
+```toml
+[editor]
+theme = "catppuccin-mocha"
+```
+
+## Built-in themes
+
+These themes ship in the binary and are always available:
+
+| Family | Names |
+|--------|-------|
+| Catppuccin | `catppuccin-latte`, `catppuccin-frappe`, `catppuccin-macchiato`, `catppuccin-mocha` |
+| Tokyo Night | `tokyonight` |
+| Nord | `nord` |
+| Dracula | `dracula` |
+| One | `onedark`, `onelight` |
+| Rosé Pine | `rose-pine` |
+| Gruvbox | `gruvbox-dark`, `gruvbox-light` |
+| Everforest | `everforest-dark`, `everforest-light` |
+| Kanagawa | `kanagawa` |
+| Solarized | `solarized-dark`, `solarized-light` |
+| Ayu | `ayu-dark`, `ayu-mirage`, `ayu-light` |
+| Monokai | `monokai-pro` |
+| Terminal | `ansi` |
+
+The special `ansi` theme uses your terminal's own 16-color palette rather than fixed hex values, so it follows whatever scheme your terminal is already set to.
+
+A theme file in your `themes/` directory **shadows** a built-in of the same name, so you can fork a built-in by dropping a file with the same name into `~/.config/vorto/themes/`.
+
+## Write your own theme
+
+Themes live in `~/.config/vorto/themes/<name>.toml`. The file is a flat map of **scope → color**, with an optional `[palette]` table for named colors. Theme files that follow this common flat-scope layout drop in unchanged.
+
+```toml
+# ~/.config/vorto/themes/mytheme.toml
+keyword           = "mauve"
+"function.macro"  = { fg = "mauve", modifiers = ["bold"] }
+comment           = { fg = "#6c7086", modifiers = ["italic"] }
+"ui.selection"    = { bg = "#313244" }
+
+[palette]            # must come last — a TOML table header captures
+mauve = "#cba6f7"    # every key that follows it
+```
+
+<Warning>
+  Put `[palette]` **last** in the file. Once a TOML table header appears, every
+  key after it belongs to that table — so any scope mappings below `[palette]`
+  would be read as palette entries instead.
+</Warning>
+
+### Color values
+
+A color can be written three ways:
+
+- A **palette name** — a key defined under `[palette]` (e.g. `mauve`).
+- A **hex literal** — `#rrggbb` or the short `#rgb` form.
+- An **ANSI color name** — `red`, `blue`, `bright-black`, and so on, resolved against the terminal palette.
+
+### Scope entries
+
+Each entry is either a bare color (shorthand for the foreground) or an inline table with `fg`, `bg`, and `modifiers`:
+
+```toml
+keyword        = "mauve"                                   # foreground only
+comment        = { fg = "#6c7086", modifiers = ["italic"] }
+"ui.selection" = { bg = "#313244" }                        # background only
+```
+
+`modifiers` accepts the usual text attributes such as `bold` and `italic` (terminal support permitting).
+
+### Scope names
+
+Scopes fall into two groups:
+
+- **Syntax** — tree-sitter highlight captures like `keyword`, `function.method`, `string`, `type.builtin`, `comment`. More specific captures fall back to their parent (`function.macro` → `function`) when unset.
+- **Editor chrome** — the `ui.*` scopes that paint the editor itself:
+
+| Scope | Paints |
+|-------|--------|
+| `ui.background` | The whole editor background. A theme that sets it recolors the background; one that omits it keeps the terminal's. |
+| `ui.selection` | The visual selection |
+| `ui.linenr` | Line numbers in the gutter |
+| `ui.statusline` | The status bar |
+| `ui.popup` | Popups such as completion and hover |
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="Editor settings" icon="sliders" href="/configuration/editor-settings">
+    The `[editor]` section, including the `theme` key.
+  </Card>
+  <Card title="Configuration overview" icon="gear" href="/configuration/overview">
+    Where the `themes/` directory sits and how config files merge.
+  </Card>
+</CardGroup>

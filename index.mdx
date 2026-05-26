@@ -9,7 +9,7 @@ description: "Vorto is a batteries-included, Vim-style modal terminal editor for
 
 ## The editor should be done
 
-**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically with `cargo install vorto`. And in an AI-assisted workflow — where the editor is one tool alongside a coding agent, a terminal, and a review loop — the hours that plugin upkeep used to justify are better spent shipping.
+**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically with `cargo install vorto`. And in an AI-assisted workflow — where the editor works alongside a coding agent, a terminal, and a review loop — the hours that plugin upkeep used to justify are better spent shipping. Vorto leans into that: [`:agent`](/editing/agent) runs an AI coding agent in a pane right inside the editor.
 
 For the philosophy behind these choices, see [Why Vorto](/why-vorto).
 
@@ -39,7 +39,8 @@ That's enough to open your first file. For building from source and other option
 
 ## Highlights
 
-- **Batteries included.** The LSP client, tree-sitter engine, fuzzy finder, file explorer, and Copilot integration all ship in the binary — no plugin manager, no init script, no `package.json`. Each language's grammar and LSP server install once with a single command, and Vorto wires them up automatically.
+- **Batteries included.** The LSP client, tree-sitter engine, fuzzy finder, file explorer, themes, bookmarks, and Copilot integration all ship in the binary — no plugin manager, no init script, no `package.json`. Each language's grammar and LSP server install once with a single command, and Vorto wires them up automatically.
+- **AI where you edit.** Copilot serves [inline ghost-text completions](/editing/copilot), and [`:agent`](/editing/agent) runs a coding agent — Claude, Codex, Gemini, or Aider — in a built-in pane, with `:agent explain @selection` handing it the code you've highlighted.
 - **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head. Pick it up faster; come back to it after a month without losing the muscle memory.
 - **One config file.** Keybindings, themes, indentation, and per-language settings all live in a single TOML file. Nothing to bootstrap, nothing to migrate.
 
@@ -73,6 +74,9 @@ That's enough to open your first file. For building from source and other option
   </Card>
   <Card title="LSP client" icon="plug" href="/lsp/overview">
     Connect language servers for completions, diagnostics, and more.
+  </Card>
+  <Card title="AI agents" icon="robot" href="/editing/agent">
+    Run Claude, Codex, Gemini, or Aider in a built-in pane with `:agent`.
   </Card>
   <Card title="Configuration" icon="sliders" href="/configuration/overview">
     Customize keybindings, themes, and language settings via TOML.

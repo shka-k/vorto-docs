@@ -1,0 +1,128 @@
+---
+title: "Run an AI coding agent inside Vorto with :agent"
+sidebarTitle: "AI agents"
+description: "Launch Claude, Codex, Gemini, or Aider in a built-in pane with :agent — no external multiplexer — and hand the agent your current file or selection with :agent explain and :agent chat."
+---
+
+<Note>
+  The `:agent` launcher ships in **0.13.0** and later. Update with
+  `cargo install vorto`.
+</Note>
+
+Vorto can run an AI coding agent in a pane **inside the editor**, alongside your buffers. The agent process runs under a pseudo-terminal that Vorto renders as a full terminal pane, so a TUI agent draws and behaves exactly as it would in your shell. There is no external multiplexer to set up — Vorto owns the pane.
+
+The launcher is a thin layer over whatever agent CLI you already use. Vorto doesn't ship an agent or talk to a model itself; it spawns the command you name (Claude, Codex, Gemini, Aider, or anything you configure) and gives it a place to live next to your code. When the agent needs context, `:agent explain` and `:agent chat` hand it your active file or visual selection.
+
+## Launch an agent
+
+Run the command prompt with `:` in Normal mode and type:
+
+```
+:agent
+```
+
+A bare `:agent` launches your configured default agent. The first time you run it with no default set, Vorto opens a **picker** listing the built-in agents — choose one and Vorto remembers it by writing `default` into your `[agent]` config (workspace-local config if present, otherwise the global file). After that, a bare `:agent` goes straight to that agent.
+
+The agent opens in a new pane. While that pane is focused, **every keystroke goes to the agent** — it's a real terminal — with one exception: `Ctrl-W` is reserved for window navigation.
+
+| Key | Action |
+|-----|--------|
+| `Ctrl-W h` / `j` / `k` / `l` | Move focus to the pane in that direction |
+| `Ctrl-W w` | Cycle focus to the next pane |
+
+Use those to move focus back to a buffer; everything else — including `Ctrl-W` sequences the agent might otherwise want — stays with Vorto's window grammar.
+
+### One agent, reused
+
+Vorto tracks a single agent session. Re-running `:agent` **focuses the existing pane** rather than spawning a second agent. The agent process keeps running even if you close its pane with `:close` — that detaches the pane without killing the process, so a later `:agent` re-attaches to the same session.
+
+The pane closes on its own when the agent process exits. Running `:agent` after that starts a fresh session.
+
+## Send your buffer to the agent
+
+`:agent` takes an optional **intent** and a **target**, so you can launch (or focus) the agent with a prompt about what you're looking at already loaded:
+
+```
+:agent explain @file
+:agent chat @file
+:agent explain @selection
+:agent chat @selection
+```
+
+- `explain` builds a prompt asking the agent to explain the target.
+- `chat` opens an open-ended prompt about the target.
+
+### `@file` — the active buffer
+
+`@file` hands the agent the path of the active buffer. If the buffer is unsaved or a scratch buffer with no path, Vorto first snapshots its contents to a temporary file so the agent has something on disk to read.
+
+### `@selection` — the visual selection
+
+`@selection` scopes the prompt to text you've selected. Select a range in Visual mode, then press `:` — Vorto captures the selection at that moment — and run:
+
+```
+:agent explain @selection
+```
+
+The selected text is embedded in the prompt as a fenced code block.
+
+<Tip>
+  The selection is captured when you open the command prompt from Visual mode,
+  not when you press `Enter`. Make your selection first, then type `:`.
+</Tip>
+
+### How the prompt reaches the agent
+
+How Vorto delivers the prompt depends on whether a pane is already open:
+
+- **Fresh launch** — the prompt is passed as a launch argument, following the agent's `prompt_args` template (see below).
+- **Existing pane** — the prompt is pasted in using bracketed paste, so a multi-line `@selection` block arrives as a single paste instead of submitting line by line.
+
+## Configure agents
+
+The agent catalog and default live under `[agent]` and `[agents.<name>]` in `config.toml`. Your entries overlay the built-in catalog: a block whose name matches a built-in overrides it; a new name adds an agent.
+
+```toml
+[agent]
+default = "claude"        # bare :agent launches this; unset → picker
+
+[agents.claude]           # override a built-in, or add a new agent
+command = "claude"        # executable, looked up on PATH
+args = ["--model", "opus"] # extra arguments passed every launch
+# How `:agent explain @file` hands over its prompt at launch. Each
+# {prompt} is replaced with the prompt text. Defaults to ["{prompt}"]
+# (a positional arg, which claude and codex accept). Set [] to opt the
+# agent out of launch-time seeding.
+prompt_args = ["{prompt}"]
+```
+
+### Built-in catalog
+
+Four agents ship in the catalog. Each assumes its CLI is already on your `PATH` — Vorto launches the command, it doesn't install it.
+
+| Agent | Command | Prompt delivery |
+|-------|---------|-----------------|
+| `claude` | `claude` | positional (`{prompt}`) |
+| `codex` | `codex` | positional (`{prompt}`) |
+| `gemini` | `gemini` | positional (`{prompt}`) |
+| `aider` | `aider` | `--message {prompt}` |
+
+### `prompt_args` and launch-time prompts
+
+`prompt_args` is the template Vorto uses to pass a prompt to a **freshly launched** agent. Most CLIs accept the prompt as a positional argument, which is the default (`["{prompt}"]`). Aider's positional arguments are file paths, so it takes the prompt via `--message` instead. Set `prompt_args = []` to opt an agent out of launch-time seeding entirely — a prompted `:agent` then opens it bare, and you can paste the context in yourself.
+
+<Note>
+  `prompt_args` only affects a fresh launch. When the prompt goes to an
+  already-open pane, Vorto pastes it in regardless of this setting.
+</Note>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Copilot" icon="ghost" href="/editing/copilot">
+    Inline ghost-text completions — the other half of Vorto's optional AI, served by `copilot-language-server`.
+  </Card>
+  <Card title="Commands" icon="terminal" href="/editing/commands">
+    The full `:` command reference, including window and split management.
+  </Card>
+</CardGroup>

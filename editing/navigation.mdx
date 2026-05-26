@@ -1,0 +1,66 @@
+---
+title: "Vorto navigation: jumplist, cursor memory, and bookmarks"
+sidebarTitle: "Jumps & bookmarks"
+description: "Retrace your path with the per-pane jumplist, return to where you left each buffer with cursor memory, and pin hot spots with harpoon-style bookmarks that persist per project."
+---
+
+Beyond motions inside a file, Vorto tracks where you've *been* so you can retrace your steps, and lets you pin the locations you keep coming back to. Three features work together here: the jumplist, per-buffer cursor memory, and bookmarks.
+
+## Jumplist
+
+Vorto records the cursor position before any large jump — a search, a `gg`/`G`, a goto-definition, opening a file — into a **per-pane jumplist**. You can then walk that history backward and forward without remembering where you came from.
+
+| Key | Action |
+|-----|--------|
+| `Ctrl-o` | Jump back to the previous position in the list |
+| `Ctrl-i` / `Tab` | Jump forward again |
+
+Each pane keeps its own jumplist, so navigating in one split doesn't disturb the history in another.
+
+### Jump history picker
+
+Run `:jumps` (or press `Space j`) to open a fuzzy picker over the whole jumplist. Each entry shows the file and line; selecting one jumps straight there. This is handy when the spot you want is several hops away and you'd rather pick it than tap `Ctrl-o` repeatedly.
+
+## Per-buffer cursor memory
+
+When you switch away from a buffer and later switch back, Vorto restores the cursor to where you left it. This is tracked **independently per pane**, so the same buffer open in two splits remembers a separate position in each. There's nothing to configure — switching buffers with `:bn`/`:bp`, the buffer picker, or the file picker all restore the remembered position.
+
+## Bookmarks
+
+Bookmarks are harpoon-style pins: a short, ordered list of locations you mark by hand and jump back to on demand. Unlike the jumplist (which fills automatically), bookmarks are the spots *you* choose. They **persist per project** across restarts, and a marked line shows a `●` in the gutter.
+
+### Mark and jump from the keyboard
+
+`Space m` is the bookmark sub-leader. Press `Space m`, then:
+
+| Key sequence | Action |
+|-------------|--------|
+| `Space m a` | Add a bookmark at the cursor |
+| `Space m d` | Remove the current buffer's bookmark |
+| `Space m m` | Open the bookmark picker |
+
+The picker is a fuzzy list of your bookmarks; selecting one jumps to it.
+
+### The `:bookmarks` command
+
+The same actions are available from the command prompt with `:bookmarks` (alias `:bm`):
+
+| Command | Action |
+|---------|--------|
+| `:bookmarks` | Open the bookmark picker (same as `:bookmarks list`) |
+| `:bookmarks list` | Open the bookmark picker |
+| `:bookmarks add` | Bookmark the current buffer at the cursor |
+| `:bookmarks delete` | Remove the current buffer's bookmark |
+
+`list` also takes the alias `ls`, and `delete` takes `del` / `rm`.
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="Keybindings" icon="keyboard" href="/editing/keybindings">
+    The full default keymap, including these navigation keys.
+  </Card>
+  <Card title="Commands" icon="terminal" href="/editing/commands">
+    The `:` command reference, including `:jumps` and `:bookmarks`.
+  </Card>
+</CardGroup>

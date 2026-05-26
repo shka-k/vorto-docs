@@ -33,8 +33,10 @@ Workspace-local config takes full precedence over the global config. Only one co
 ~/.config/vorto/
 ├── config.toml       # editor settings, keybindings, language overrides
 ├── grammars/         # installed tree-sitter .so / .dylib / .dll libraries
-└── queries/
-    └── <lang>/       # highlights.scm, indents.scm, etc. per language
+├── queries/
+│   └── <lang>/       # highlights.scm, indents.scm, etc. per language
+└── themes/
+    └── <name>.toml   # your color themes (shadow built-ins of the same name)
 ```
 
 The `grammars/` and `queries/` directories can be overridden with `grammar_dir` and `query_dir` keys at the top level of `config.toml`.
@@ -49,6 +51,7 @@ The `grammars/` and `queries/` directories can be overridden with `grammar_dir` 
 | `[languages.<name>]` | Per-language overrides for editor settings, grammar, LSP, and formatter |
 | `[lsp.<name>]` | LSP server definitions — override built-ins or add new servers |
 | `[grammars.<name>]` | Tree-sitter grammar recipes for languages outside the built-in catalog |
+| `[agent]` / `[agents.<name>]` | The default AI agent and command-line catalog for the `:agent` launcher |
 
 ## Minimal complete example
 
@@ -82,6 +85,8 @@ args = ["--log-file", "/tmp/ra.log"]
 ## Further reading
 
 - [Editor settings](/configuration/editor-settings) — full reference for `[editor]` and `[cursor]`
+- [Themes](/configuration/themes) — the `:theme` picker, the built-in catalog, and writing your own
 - [Keybindings](/configuration/keybindings) — key notation, action names, and `[[bind]]` syntax
 - [Per-language settings](/configuration/languages) — `[languages.<name>]` table fields
 - [LSP servers](/configuration/lsp-servers) — `[lsp.<name>]` table fields and built-in server list
+- [AI agents](/editing/agent#configure-agents) — `[agent]` / `[agents.<name>]` fields for the `:agent` launcher

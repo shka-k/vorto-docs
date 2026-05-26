@@ -70,6 +70,15 @@ Vorto ships with a vim-style keymap out of the box. Every binding listed here is
 | `*` | Search forward for the word under the cursor |
 | `#` | Search backward for the word under the cursor |
 
+### Jump history
+
+Vorto records the cursor position before each large jump into a per-pane jumplist. See [Jumps & bookmarks](/editing/navigation#jumplist).
+
+| Key | Action |
+|-----|--------|
+| `Ctrl-o` | Jump back to the previous position in the jumplist |
+| `Ctrl-i` / `Tab` | Jump forward again |
+
 ## Entering Insert mode
 
 | Key | Action |
@@ -188,6 +197,7 @@ The leader key is `Space`. Press `Space` in Normal mode, then the second key:
 | `Space e` | Open the file tree explorer for the current workspace |
 | `Space d` | Open the diagnostics picker (current buffer) |
 | `Space D` | Open the diagnostics picker (entire workspace) |
+| `Space j` | Open the jump history picker |
 | `Space r` | Rename the symbol under the cursor (LSP) |
 | `Space a` | Show code actions at the cursor (LSP) |
 | `Space K` / `Space k` | Show hover documentation (LSP) |
@@ -195,7 +205,18 @@ The leader key is `Space`. Press `Space` in Normal mode, then the second key:
 | `Space *` | Seed the search pattern from the word under the cursor (forward, keep position) |
 | `Space #` | Seed the search pattern from the word under the cursor (backward, keep position) |
 | `Space ,` | Clear all extra multi-cursors |
+| `Space m` | Enter the bookmark sub-leader (see below) |
 | `Space w` | Enter the window sub-leader (see below) |
+
+### `Space m` sub-leader (bookmarks)
+
+Harpoon-style bookmarks that persist per project; marked lines show a `●` in the gutter. See [Jumps & bookmarks](/editing/navigation#bookmarks).
+
+| Key sequence | Action |
+|-------------|--------|
+| `Space m a` | Add a bookmark at the cursor |
+| `Space m d` | Remove the current buffer's bookmark |
+| `Space m m` | Open the bookmark picker |
 
 ## Window bindings
 
@@ -231,6 +252,10 @@ The leader key is `Space`. Press `Space` in Normal mode, then the second key:
 |-------------|--------|
 | `]d` | Jump to the next LSP diagnostic in the buffer |
 | `[d` | Jump to the previous LSP diagnostic in the buffer |
+| `]c` | Jump to the next git conflict marker |
+| `[c` | Jump to the previous git conflict marker |
+
+Resolve the conflict at the cursor with `:conflict` — see [Conflicts & reload](/editing/conflicts).
 
 ## Multi-cursor
 
