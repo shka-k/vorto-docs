@@ -15,13 +15,21 @@ For the philosophy behind these choices, see [Why Vorto](/why-vorto).
 
 ## Install
 
-Vorto is a single static binary. Install it with [mise](https://mise.jdx.dev) (recommended) or download a prebuilt binary from the [releases page](https://github.com/vorto-editor/vorto/releases) — both come with every built-in grammar embedded, so highlighting works on first launch:
+Vorto is a single static binary. Install it with [mise](https://mise.jdx.dev) or [Homebrew](https://brew.sh) (recommended) — both download a prebuilt binary with every built-in grammar embedded, so highlighting works on first launch:
 
-```bash
+<CodeGroup>
+
+```bash mise
 mise use github:vorto-editor/vorto
 ```
 
-A `cargo install vorto` build also works, but it ships without the bundled grammars and installs them on demand instead — see [Installation](/installation) for that and other options.
+```bash Homebrew
+brew install vorto-editor/tap/vorto
+```
+
+</CodeGroup>
+
+You can also grab a prebuilt archive from the [releases page](https://github.com/vorto-editor/vorto/releases). A `cargo install vorto` build also works, but it ships without the bundled grammars and installs them on demand instead — see [Installation](/installation) for that and other options.
 
 Then confirm the binary is on your `PATH`:
 
