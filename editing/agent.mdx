@@ -32,6 +32,8 @@ The agent opens in a new pane. While that pane is focused, **every keystroke goe
 
 Use those to move focus back to a buffer; everything else — including `Ctrl-W` sequences the agent might otherwise want — stays with Vorto's window grammar.
 
+While the agent pane is focused, the **mouse wheel scrolls the agent terminal's scrollback** rather than walking the prompt. Typing snaps the view back to the live bottom.
+
 ### One agent, reused
 
 Vorto tracks a single agent session. Re-running `:agent` **focuses the existing pane** rather than spawning a second agent. The agent process keeps running even if you close its pane with `:close` — that detaches the pane without killing the process, so a later `:agent` re-attaches to the same session.

@@ -1,0 +1,15 @@
+---
+title: "0.14.0"
+description: "Vim-style code folding with za/zo/zc/zR/zM backed by tree-sitter folds, a <space>g picker over files changed from HEAD, and mouse-wheel scrollback in the agent pane."
+---
+
+Released **May 29, 2026**.
+
+## New features
+
+- **Code folding (`za` / `zo` / `zc` / `zR` / `zM`).** Collapse and expand regions of a buffer Vim-style: `za` toggles the fold under the cursor, `zo` opens it, `zc` closes it, and `zR` / `zM` open or close every fold in the buffer. Fold ranges come from a language's tree-sitter `folds.scm` when one is available, fall back to indentation so folding works in any buffer, and an import-run heuristic folds consecutive `import` / `use` statements (including multiline brace and paren forms). A collapsed fold shows a ` ⋯ N lines` marker on its header row (themable via the `ui.fold` scope), and vertical motions step over the hidden lines. Folds are tracked **per pane** and survive buffer switches. See [Folding](/editing/folding).
+- **`<space>g` — changed-file picker.** A new fuzzy picker lists every file that differs from `HEAD`, with the same live-preview interface as the file picker. Submitting a result opens the file at its root-relative path. Outside a git repository, or with a clean working tree, Vorto reports "no changed files" instead of opening an empty picker. See [Changed-file picker](/editing/commands#changed-file-picker).
+
+## Improvements
+
+- **Scroll the agent pane with the mouse wheel.** While the [`:agent`](/editing/agent) pane is focused, the mouse wheel now scrolls the agent terminal's scrollback instead of being translated into arrow keys that walk the prompt. Typing snaps the view back to the live bottom. Other panes keep their previous wheel behavior.

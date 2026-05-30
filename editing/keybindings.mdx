@@ -183,6 +183,18 @@ Press `g` in Normal mode to enter the goto sub-context:
 | `zt` | Scroll so the cursor's line is at the top of the viewport |
 | `zb` | Scroll so the cursor's line is at the bottom of the viewport |
 
+## Folding (`z` prefix)
+
+Collapse and expand buffer regions. Fold ranges come from a language's tree-sitter `folds.scm`, falling back to indentation. See [Folding](/editing/folding).
+
+| Key sequence | Action |
+|-------------|--------|
+| `za` | Toggle the fold under the cursor |
+| `zo` | Open the fold under the cursor |
+| `zc` | Close the fold under the cursor |
+| `zR` | Open every fold in the buffer |
+| `zM` | Close every fold in the buffer |
+
 ## Leader key bindings (`Space`)
 
 The leader key is `Space`. Press `Space` in Normal mode, then the second key:
@@ -194,6 +206,7 @@ The leader key is `Space`. Press `Space` in Normal mode, then the second key:
 | `Space l` | Fuzzy search lines in the current buffer |
 | `Space /` | Fuzzy search across all workspace files |
 | `Space b` | Open the buffer picker |
+| `Space g` | Open the changed-file picker (files differing from `HEAD`) |
 | `Space e` | Open the file tree explorer for the current workspace |
 | `Space d` | Open the diagnostics picker (current buffer) |
 | `Space D` | Open the diagnostics picker (entire workspace) |

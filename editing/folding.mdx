@@ -1,0 +1,50 @@
+---
+title: "Vorto code folding: collapse regions with za/zo/zc/zR/zM"
+sidebarTitle: "Folding"
+description: "Collapse and expand buffer regions Vim-style with za/zo/zc/zR/zM. Fold ranges come from tree-sitter folds.scm, fall back to indentation, and an import-run heuristic folds consecutive import/use statements."
+---
+
+<Note>
+  Code folding ships in **0.14.0** and later. Update with `cargo install vorto`.
+</Note>
+
+Folding collapses a region of a buffer down to its header line so you can hide a function body, a block, or a run of imports while you work elsewhere. Vorto follows Vim's `z` fold keys, and figures out where the foldable regions are for you — no markers to add by hand.
+
+## Fold keys
+
+| Key | Action |
+|-----|--------|
+| `za` | Toggle the fold under the cursor (open if closed, close if open) |
+| `zo` | Open the fold under the cursor |
+| `zc` | Close the fold under the cursor |
+| `zR` | Open every fold in the buffer |
+| `zM` | Close every fold in the buffer |
+
+A closed fold keeps its **header row** visible and hides the rows beneath it, drawing a ` ⋯ N lines` marker that tells you how many lines are tucked away. Vertical motions (`j` / `k`, `Ctrl-d`, search, and the rest) step over the hidden lines, and the cursor is never left stranded inside a closed fold.
+
+## Where folds come from
+
+Vorto works out the foldable regions in a buffer from three sources, in order of preference:
+
+- **Tree-sitter `folds.scm`.** When the buffer's language ships a `folds.scm` query, its `@fold` captures define the fold ranges — function bodies, blocks, arrays, and whatever else the query marks.
+- **Indentation fallback.** For a language without a `folds.scm` (or a buffer with no grammar at all), Vorto derives folds from indentation, so folding still works in any file.
+- **Import runs.** Consecutive `import` / `use` statements at the top of a file fold together as a single region, including the multiline brace and paren forms, so you can collapse a long import block in one keystroke.
+
+## Per-pane fold state
+
+Which folds are open or closed is tracked **per pane** and follows the buffer: switch away to another buffer and back, and your folds are exactly as you left them. Splitting a pane copies its fold state into the new pane, and the state is cleaned up when you close the buffer (`:bd`) or reload it from disk (`:reload`).
+
+## Theming the fold marker
+
+The ` ⋯ N lines` marker drawn on a closed fold's header row is painted with the `ui.fold` theme scope. Set it in your theme to control the marker's color — see [Themes](/configuration/themes#scope-names).
+
+## See also
+
+<CardGroup cols={2}>
+  <Card title="Keybindings" icon="keyboard" href="/editing/keybindings#folding-z-prefix">
+    The full default keymap, including the fold keys.
+  </Card>
+  <Card title="Grammars" icon="tree" href="/languages/grammars#how-queries-work">
+    How `folds.scm` and the other tree-sitter query files work.
+  </Card>
+</CardGroup>

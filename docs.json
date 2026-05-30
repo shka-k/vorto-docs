@@ -36,6 +36,7 @@
               "editing/coming-from-vim",
               "editing/commands",
               "editing/navigation",
+              "editing/folding",
               "editing/conflicts",
               "editing/hints",
               "editing/copilot",
@@ -82,6 +83,7 @@
           {
             "group": "Releases",
             "pages": [
+              "changelog/v0.14.0",
               "changelog/v0.13.0",
               "changelog/v0.12.1",
               "changelog/v0.12.0",
