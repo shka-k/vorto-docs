@@ -1,0 +1,17 @@
+---
+title: "0.15.0"
+description: "Prebuilt binaries now ship with every built-in grammar embedded, so syntax highlighting works on first launch with no compiler and no install step. Seven new languages, fold queries for the built-ins, and richer text objects."
+---
+
+Released **May 30, 2026**.
+
+## New features
+
+- **Grammars bundled in prebuilt binaries.** Release binaries — including the one [mise](https://mise.jdx.dev) installs — now embed pre-built tree-sitter grammar libraries for every built-in language and extract them into `~/.config/vorto/` on first launch. Syntax highlighting works out of the box: no `vorto grammar install`, no network, and no C compiler. The extraction is idempotent, re-runs after an upgrade to pick up refreshed grammars, and never clobbers a grammar you've repointed with a `[grammars.<name>]` config entry. Builds from `cargo install` and plain `cargo build` keep the runtime-install flow instead. See [Installation](/installation#what-the-binary-includes) and [Grammars](/languages/grammars#grammars-bundled-in-prebuilt-binaries).
+- **Seven new built-in languages.** Julia (`.jl`), Gleam (`.gleam`), Scala (`.scala`, `.sbt`, `.sc`), Odin (`.odin`), Protocol Buffers (`.proto`), CMake (`.cmake`, `CMakeLists.txt`), and XML (`.xml`, `.xsd`, `.xsl`, `.xslt`, `.svg`, `.wsdl`) each ship with a pinned grammar recipe, language config, and vendored queries — bringing the built-in catalog to **44 languages**. See [Supported languages](/languages/supported-languages).
+- **Richer text objects.** Call-argument text objects (`ia` / `aa`), OCaml and Haskell argument objects, inner-body trimming, and a Zig inner object round out the tree-sitter `textobjects.scm` coverage.
+
+## Improvements
+
+- **Fold queries for the built-ins.** Every built-in language now ships a `folds.scm`, so [code folding](/editing/folding) follows real syntax (functions, blocks, brackets) instead of falling back to indentation. Missing `indents.scm` files were filled in at the same time.
+- **Text predicates are now honored.** Tree-sitter `#eq?` / `#match?` text predicates are applied when highlighting and when matching injections, so predicate-gated rules — like XML's `<style>` → CSS and `<script>` → JavaScript injections, or Julia's `r"…"` → regex — only fire on the nodes they target.

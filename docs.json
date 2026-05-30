@@ -83,6 +83,7 @@
           {
             "group": "Releases",
             "pages": [
+              "changelog/v0.15.0",
               "changelog/v0.14.0",
               "changelog/v0.13.0",
               "changelog/v0.12.1",

@@ -88,7 +88,9 @@ Inside the editor, the fuzzy finder lets you quickly open files, switch buffers,
 
 ## Enable syntax highlighting
 
-Everything above works on a plain, uncolored buffer. To turn on syntax highlighting for a language, install its tree-sitter grammar once — Vorto does not bundle compiled grammar libraries:
+If you installed Vorto with [mise](/installation#install-with-mise) or a [prebuilt binary](/installation#download-a-prebuilt-binary), syntax highlighting is already on — those binaries ship with grammars for every built-in language embedded, extracted on first launch. You can skip ahead to [the next step](#next-steps).
+
+If you built Vorto with `cargo install` or from source, no grammars are bundled. Everything above works on a plain, uncolored buffer until you install a language's tree-sitter grammar once:
 
 ```bash
 vorto grammar install rust
@@ -110,7 +112,7 @@ vorto grammar list
 This is a one-time step per language; once built, the grammar is cached and loaded on every subsequent start.
 
 <Note>
-  A C compiler (`gcc` or `clang`) must be on your `PATH` when building grammars. The build happens once; subsequent editor starts load the cached library.
+  A C compiler (`gcc` or `clang`) must be on your `PATH` when building grammars this way. The build happens once; subsequent editor starts load the cached library. (Prebuilt binaries skip this — their grammars are already compiled.)
 </Note>
 
 For diagnostics, completions, and goto definition, install a language server for your language and Vorto attaches it automatically — see [LSP setup](/lsp/setup). Like grammars, this is a one-time per-language setup, and editing works fine without it.

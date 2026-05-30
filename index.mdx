@@ -9,25 +9,19 @@ description: "Vorto is a batteries-included, Vim-style modal terminal editor for
 
 ## The editor should be done
 
-**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically with `cargo install vorto`. And in an AI-assisted workflow — where the editor works alongside a coding agent, a terminal, and a review loop — the hours that plugin upkeep used to justify are better spent shipping. Vorto leans into that: [`:agent`](/editing/agent) runs an AI coding agent in a pane right inside the editor.
+**If your current modal-editor config mostly exists to bolt on LSP, tree-sitter, fuzzy finding, and Copilot, Vorto replaces that whole stack with one binary.** No plugin manager, no per-plugin upgrade ritual, no morning where the LSP client and the tree-sitter runtime disagree about a breaking change. The editor either runs or it doesn't, and it updates atomically as a single binary. And in an AI-assisted workflow — where the editor works alongside a coding agent, a terminal, and a review loop — the hours that plugin upkeep used to justify are better spent shipping. Vorto leans into that: [`:agent`](/editing/agent) runs an AI coding agent in a pane right inside the editor.
 
 For the philosophy behind these choices, see [Why Vorto](/why-vorto).
 
 ## Install
 
-Vorto is a single static binary. Install it from [crates.io](https://crates.io/crates/vorto) with Cargo or with [mise](https://mise.jdx.dev):
+Vorto is a single static binary. Install it with [mise](https://mise.jdx.dev) (recommended) or download a prebuilt binary from the [releases page](https://github.com/vorto-editor/vorto/releases) — both come with every built-in grammar embedded, so highlighting works on first launch:
 
-<CodeGroup>
-
-```bash Cargo
-cargo install vorto
-```
-
-```bash mise
+```bash
 mise use github:vorto-editor/vorto
 ```
 
-</CodeGroup>
+A `cargo install vorto` build also works, but it ships without the bundled grammars and installs them on demand instead — see [Installation](/installation) for that and other options.
 
 Then confirm the binary is on your `PATH`:
 
@@ -39,7 +33,7 @@ That's enough to open your first file. For building from source and other option
 
 ## Highlights
 
-- **Batteries included.** The LSP client, tree-sitter engine, fuzzy finder, file explorer, themes, bookmarks, and Copilot integration all ship in the binary — no plugin manager, no init script, no `package.json`. Each language's grammar and LSP server install once with a single command, and Vorto wires them up automatically.
+- **Batteries included.** The LSP client, tree-sitter engine, fuzzy finder, file explorer, themes, bookmarks, and Copilot integration all ship in the binary — no plugin manager, no init script, no `package.json`. Prebuilt binaries come with grammars for every built-in language baked in, and each language server installs once with a single command — Vorto wires them up automatically.
 - **AI where you edit.** Copilot serves [inline ghost-text completions](/editing/copilot), and [`:agent`](/editing/agent) runs a coding agent — Claude, Codex, Gemini, or Aider — in a built-in pane, with `:agent explain @selection` handing it the code you've highlighted.
 - **Vim commands, lower learning cost.** Vorto follows Vim's modal model, and surfaces [command hints inline](/editing/hints) so you don't have to keep the full keymap in your head. Pick it up faster; come back to it after a month without losing the muscle memory.
 - **One config file.** Keybindings, themes, indentation, and per-language settings all live in a single TOML file. Nothing to bootstrap, nothing to migrate.
@@ -48,7 +42,7 @@ That's enough to open your first file. For building from source and other option
 
 **Modal editing.** Five modes (Normal, Insert, Visual, Visual Line, Visual Block) plus a `:` command prompt. The status bar always shows the active mode. See [Editing modes](/editing/modes).
 
-**Language support.** Tree-sitter grammars install on demand via `vorto grammar install`. 37 languages ship with built-in recipes. See [Supported languages](/languages/supported-languages).
+**Language support.** 44 languages ship with built-in recipes. Prebuilt binaries embed their tree-sitter grammars, so highlighting works on first launch; `cargo` and source builds install grammars on demand via `vorto grammar install`. See [Supported languages](/languages/supported-languages).
 
 **LSP client.** Diagnostics, completions, hover, code actions, and goto definition out of the box. Servers spawn lazily when you open a file. See [LSP overview](/lsp/overview).
 

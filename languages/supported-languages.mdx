@@ -4,7 +4,7 @@ sidebarTitle: "Supported languages"
 description: "A reference of every language Vorto supports by default — file extensions, tree-sitter grammar recipe, built-in LSP server, and default formatter."
 ---
 
-Vorto ships with built-in definitions for 37 languages. Each definition covers the file extensions (and exact filenames where relevant) that map to the language, which tree-sitter grammar recipe is used, and any default LSP server or formatter. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
+Vorto ships with built-in definitions for 44 languages. Each definition covers the file extensions (and exact filenames where relevant) that map to the language, which tree-sitter grammar recipe is used, and any default LSP server or formatter. You do not need any configuration to use these languages — install the grammar and the LSP server binary, and Vorto picks them up automatically.
 
 ## Built-in language table
 
@@ -47,6 +47,13 @@ Vorto ships with built-in definitions for 37 languages. Each definition covers t
 | OCaml | `.ml`, `.mli` | `ocaml` | `ocamllsp` | `ocamlformat` |
 | GraphQL | `.graphql`, `.gql` | `graphql` | `graphql-lsp` | — |
 | Fish | `.fish` | `fish` | `fish-lsp` | `fish_indent` |
+| Julia | `.jl` | `julia` | `julia` (LanguageServer.jl) | — |
+| Gleam | `.gleam` | `gleam` | `gleam` | `gleam format --stdin` |
+| Scala | `.scala`, `.sbt`, `.sc` | `scala` | `metals` | — |
+| Odin | `.odin` | `odin` | `ols` | — |
+| Protocol Buffers | `.proto` | `proto` | `protols` | — |
+| CMake | `.cmake`, `CMakeLists.txt` | `cmake` | `cmake-language-server` | — |
+| XML | `.xml`, `.xsd`, `.xsl`, `.xslt`, `.svg`, `.wsdl` | `xml` | `lemminx` | — |
 
 ## Notes on specific languages
 
@@ -71,6 +78,12 @@ Vorto ships with built-in definitions for 37 languages. Each definition covers t
 **OCaml** uses a single language entry for both `.ml` and `.mli`. Files share `ocamllsp` and `ocamlformat`.
 
 **Swift** depends on `sourcekit-lsp`, which ships with the Swift toolchain — install Swift and the server is already on `PATH`.
+
+**Julia** and **Gleam** host their language server inside the language's own runtime rather than a standalone binary: Julia launches `LanguageServer.jl` through the `julia` executable, and Gleam's server is built into the `gleam` CLI. Install the toolchain and the server comes with it.
+
+**Scala** maps `.scala` sources, `.sbt` build files, and `.sc` worksheets to a single entry, served by `metals` (install it through Coursier).
+
+**XML** also covers `.xsd`, `.xsl`, `.xslt`, `.svg`, and `.wsdl`. There is no line-comment token, so the `<space>c` toggle uses the `<!-- -->` block form.
 
 ## Installing grammars and LSP servers
 

@@ -1,34 +1,57 @@
 ---
-title: "Install Vorto with mise, Cargo, or from source"
+title: "Install Vorto with mise, a prebuilt binary, or from source"
 sidebarTitle: "Installation"
-description: "Install Vorto with mise, from crates.io with Cargo, or build from source with Make or Cargo. Verify the binary before opening your first file."
+description: "Install Vorto with mise or a prebuilt binary — both ship with tree-sitter grammars embedded, so highlighting works on first launch. Or build from crates.io or source. Verify the binary before opening your first file."
 ---
 
-Vorto is distributed as a single static binary. You can install it with [mise](https://mise.jdx.dev), from [crates.io](https://crates.io/crates/vorto) using Cargo, or build it yourself from the source repository. The Cargo and source paths require a Rust toolchain that supports edition 2024.
+Vorto is distributed as a single static binary. The recommended way to install it is with [mise](https://mise.jdx.dev) or by downloading a prebuilt release binary — both come with every built-in tree-sitter grammar embedded, so syntax highlighting works the moment you open a file. You can also build it yourself from [crates.io](https://crates.io/crates/vorto) with Cargo or from the source repository; those paths require a Rust toolchain that supports edition 2024 and build grammars on demand instead of bundling them.
 
 <Note>
-  A C compiler (such as `gcc` or `clang`) is required when building tree-sitter grammars after installation. The editor itself compiles and runs without one, but `vorto grammar install` will fail without it. See [Installing a C compiler](/troubleshooting#installing-a-c-compiler) for per-OS instructions.
+  A prebuilt binary needs no C compiler — grammars ship pre-compiled inside it. A C compiler (such as `gcc` or `clang`) is only required if you install with `cargo` or from source, because those builds compile each tree-sitter grammar the first time you install it with `vorto grammar install`. See [Installing a C compiler](/troubleshooting#installing-a-c-compiler) for per-OS instructions.
 </Note>
 
 ## Install with mise
 
-[mise](https://mise.jdx.dev) can install Vorto directly from the GitHub repository and pin the version per project:
+[mise](https://mise.jdx.dev) downloads the prebuilt binary for your platform from the GitHub releases and pins the version per project:
 
 ```bash
 mise use github:vorto-editor/vorto
 ```
 
-This installs the latest release and adds Vorto to the active mise environment so the `vorto` binary is on your `PATH`. Run the command inside a project directory to scope the version to that project, or pass `-g` to install it globally.
+This installs the latest release and adds Vorto to the active mise environment so the `vorto` binary is on your `PATH`. Run the command inside a project directory to scope the version to that project, or pass `-g` to install it globally. Because mise fetches a release binary, the built-in grammars come embedded — no separate install step.
+
+## Download a prebuilt binary
+
+Each release publishes a `tar.gz` archive per platform on the [GitHub releases page](https://github.com/vorto-editor/vorto/releases). Prebuilt binaries are available for:
+
+| Platform | Target |
+|----------|--------|
+| Linux (x86-64) | `x86_64-unknown-linux-gnu` |
+| Linux (ARM64) | `aarch64-unknown-linux-gnu` |
+| macOS (Apple Silicon) | `aarch64-apple-darwin` |
+
+Download the archive for your platform, extract it, and move the `vorto` binary to a directory on your `PATH`:
+
+```bash
+tar -xzf vorto-0.15.0-aarch64-apple-darwin.tar.gz
+install vorto-0.15.0-aarch64-apple-darwin/vorto ~/.local/bin/vorto
+```
+
+Like the mise install, these binaries ship with all built-in grammars embedded. If your platform isn't listed (for example macOS on Intel, or Windows), install from crates.io or build from source instead.
 
 ## Install from crates.io
 
-To install directly from crates.io with Cargo:
+<Warning>
+  Installing with Cargo is **not recommended for most users.** The binary on crates.io is built without the embedded grammars, so you must install each language's grammar at runtime with `vorto grammar install` — which needs a C compiler and network access. Prefer [mise](#install-with-mise) or a [prebuilt binary](#download-a-prebuilt-binary) unless you specifically need a source build (for example, an unsupported platform, or to build from a local checkout).
+</Warning>
+
+To build and install from crates.io with Cargo:
 
 ```bash
 cargo install vorto
 ```
 
-Cargo downloads, compiles, and places the `vorto` binary in `~/.cargo/bin`. Make sure that directory is on your `PATH`.
+Cargo downloads, compiles, and places the `vorto` binary in `~/.cargo/bin`. Make sure that directory is on your `PATH`. Because this build does not bundle grammars, install the ones you need afterward with `vorto grammar install` — see [Install and manage grammars](/languages/grammars).
 
 ## Install from source
 
@@ -57,6 +80,13 @@ Cargo downloads, compiles, and places the `vorto` binary in `~/.cargo/bin`. Make
     `make install` places the binary at `~/.local/bin/vorto`. Make sure `~/.local/bin` is on your `PATH`.
 
     `cargo build --release` produces the binary at `target/release/vorto`. Copy it to a directory on your `PATH` manually.
+
+    A plain source build does not embed grammars, so you'll install them on demand with `vorto grammar install`. To reproduce the release binary with grammars baked in, build every grammar first and turn on the feature:
+
+    ```bash
+    cargo run --release -- grammar bundle
+    cargo build --release --features bundled-grammars
+    ```
   </Step>
 </Steps>
 
@@ -68,15 +98,14 @@ Run the following command to confirm Vorto is installed and accessible:
 vorto --version
 ```
 
-You should see output like `vorto 0.14.0`. If the command is not found, check that the install directory is included in your `PATH`.
+You should see output like `vorto 0.15.0`. If the command is not found, check that the install directory is included in your `PATH`.
 
-## Next steps
+## What the binary includes
 
-Vorto does not bundle tree-sitter grammars or language servers, so two more steps turn on the full experience for a language:
+A prebuilt binary (from mise or the releases page) ships with tree-sitter grammars for all [44 built-in languages](/languages/supported-languages) embedded. On first launch Vorto extracts them into `~/.config/vorto/grammars/` and `~/.config/vorto/queries/`, so highlighting is on from the very first file — no install step, no compiler, no network. The extraction re-runs after you upgrade Vorto to pick up refreshed grammars, and it never overwrites a grammar you've repointed with a `[grammars.<name>]` config entry.
 
-- **Syntax highlighting** — install the tree-sitter grammar for the language you use first, e.g. `vorto grammar install rust`. See [Install and manage grammars](/languages/grammars) for the build prerequisites.
-- **LSP features** — install the matching language server and make sure its binary is on your `PATH`. See [Set up LSP support](/lsp/setup).
+Language servers are never bundled. To turn on LSP features — diagnostics, completion, goto definition — install the matching language server and make sure its binary is on your `PATH`. See [Set up LSP support](/lsp/setup).
 
 <Tip>
-  Install the grammar before you open your first file so syntax highlighting is on from the start.
+  If you installed with `cargo` or from source instead, install a language's grammar before you open your first file so syntax highlighting is on from the start, e.g. `vorto grammar install rust`. See [Install and manage grammars](/languages/grammars).
 </Tip>

@@ -4,7 +4,17 @@ sidebarTitle: "Grammars"
 description: "Install and manage tree-sitter grammars in Vorto from the CLI or the in-editor :grammar command, add custom [grammars.<name>] recipes for languages outside the built-in catalog, and manage query files."
 ---
 
-Vorto uses [tree-sitter](https://tree-sitter.github.io) for syntax highlighting, but it does not bundle compiled grammar libraries. Instead, you install only the languages you need — from the command line with the `vorto grammar` subcommand, or from inside the editor with the [`:grammar` command](#installing-grammars-from-the-editor). Each grammar is fetched from its upstream Git repository and compiled into a shared library that Vorto loads at startup.
+Vorto uses [tree-sitter](https://tree-sitter.github.io) for syntax highlighting. Prebuilt binaries — the ones [mise](https://mise.jdx.dev) and the [releases page](https://github.com/vorto-editor/vorto/releases) provide — ship with every built-in grammar already embedded, so highlighting works out of the box (see [below](#grammars-bundled-in-prebuilt-binaries)). If you installed with `cargo install` or built from source, no grammars are bundled: you install only the languages you need — from the command line with the `vorto grammar` subcommand, or from inside the editor with the [`:grammar` command](#installing-grammars-from-the-editor). Each grammar is fetched from its upstream Git repository and compiled into a shared library that Vorto loads at startup. The same commands also let you add languages beyond the built-in catalog, or refresh an embedded grammar's files, regardless of how you installed Vorto.
+
+## Grammars bundled in prebuilt binaries
+
+Release binaries are built with grammars for all [44 built-in languages](/languages/supported-languages) embedded. On first launch, Vorto extracts them into `~/.config/vorto/grammars/` and `~/.config/vorto/queries/` — no `vorto grammar install`, no network request, and no C compiler. From there they behave exactly like grammars you installed yourself: you can list, refresh, or remove them with the commands below.
+
+A few details worth knowing:
+
+- **Upgrades refresh them.** When you run a newer Vorto, it re-extracts the bundled set so updated grammar libraries and queries replace the old ones. It's a no-op once everything is already current.
+- **Your overrides win.** If you've repointed a language with a `[grammars.<name>]` config entry, Vorto never overwrites it with the bundled copy — your recipe stays authoritative for that name.
+- **`cargo` and source builds don't bundle.** The crates.io binary and a plain `cargo build` ship without embedded grammars, so on those you install grammars on demand as described below. (A source build *can* embed them — see [Install from source](/installation#install-from-source).)
 
 ## Where grammars are stored
 
