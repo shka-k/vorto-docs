@@ -1,0 +1,16 @@
+---
+title: "0.15.1"
+description: "Per-language formatters can now point at LSP servers, the cursor's line expands to show every diagnostic on it, and fixes for multi-line yank/paste and escape-sequence theming."
+---
+
+Released **May 31, 2026**.
+
+## New features
+
+- **LSP servers as per-language formatters.** The `[languages.<name>]` `formatter` field is now polymorphic. Set it to a list of LSP server names — `formatter = ["biome"]` — and Vorto formats on save with those servers' `textDocument/formatting`, trying them in priority order until one is attached and succeeds. The existing external-command form, `formatter = { command = "rustfmt" }`, is unchanged. See [Languages](/configuration/languages#formatter).
+- **Every diagnostic on the cursor line is shown at once.** The row under the cursor now renders one virtual line per diagnostic — worst severity first — instead of collapsing into a single message with a `(+N)` overflow indicator. Every diagnostic on the line you're editing is visible at a glance; other rows keep the quieter errors-only collapse. See [LSP overview](/lsp/overview).
+
+## Bug fixes
+
+- **`Ndd` / `Nyy` now capture every line.** A counted linewise delete or yank — like `3dd` or `5yy` — looped the single-line operation and left only the last line in the register. Vorto now captures the whole N-line run in one go, syncs a linewise delete to the system clipboard, and pastes a multi-line register back as separate rows (with `Np` repeating the whole block contiguously).
+- **Escape sequences are themed again.** The JSON, Rust, Python, Go, and Ruby highlight queries captured escapes under a scope no theme defines, so a `\n` inside a string rendered in the terminal's default color. They now resolve to `string.escape` like the other built-in languages, so escapes pick up the theme.

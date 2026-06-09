@@ -6,6 +6,8 @@ description: "Learn where Vorto looks for its config file, how workspace-local .
 
 Vorto reads a single TOML file at startup and merges it onto its built-in defaults. You don't need to create the file to use Vorto — every setting has a sensible default — but the file is your primary way to tune editor behavior, cursor shapes, keybindings, language settings, and LSP servers.
 
+You can re-read the file without restarting by running `:config-reload`. It re-applies the settings that can change live — keymap, cursor shapes, `[editor]` / `[finder]` options, the agent catalog, grammar recipes, and the active theme. Already-running subsystems (LSP servers, syntax and preview workers) keep their startup snapshot and need a restart. See [Commands](/editing/commands#configuration).
+
 ## Config file location
 
 The global config file lives at:

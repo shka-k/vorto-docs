@@ -1,0 +1,17 @@
+---
+title: "0.15.3"
+description: "Write-all commands save every dirty buffer at once, :config-reload re-reads config.toml at runtime, and Visual mode counts, line jumps, find-char, and search motions now match Vim."
+---
+
+Released **June 9, 2026**.
+
+## New features
+
+- **`:wa` / `:wqa` write-all commands.** Save every dirty file-backed buffer in one command — the active buffer (with format-on-save, like `:w`), buffers parked in other split panes, and sleeping buffers. Clean buffers and unnamed scratch buffers are skipped, and Vorto refuses to clobber a file that drifted on disk since load unless you force it with `:wa!`. `:wqa` (alias `:xa`) saves all and quits, but only once every buffer wrote cleanly. See [Commands](/editing/commands#file-and-session-commands).
+- **`:config-reload` re-reads your config at runtime.** Run `:config-reload` (alias `:reload-config`) to re-read `config.toml` and re-apply the settings that can change live: keymap, cursor shapes, `[editor]` / `[finder]` options, the agent catalog, grammar recipes, and the active theme. A load or parse error leaves the running config untouched and surfaces a toast. Already-running subsystems — LSP servers, syntax and preview workers — keep their startup snapshot and still need a restart. See [Commands](/editing/commands#configuration).
+- **Visual mode motions match Vim.** Visual mode bypasses the Normal-mode command pipeline, so several motions had drifted. They're now back in line: counts accumulate and apply to motions (`5j`, `3w`, `10k`); `NG` / `Ngg` jump to a line number while bare `G` / `gg` keep their file-end / file-start behavior (`1G` / `1gg` go to line 1, as in Vim); `f` / `F` / `t` / `T` find-char motions take counts and repeat with `;` / `,`; and `n` / `N` extend the selection to the next / previous search match.
+
+## Bug fixes
+
+- **New files from the explorer open as buffers, not empty disk stubs.** Creating a file from the `Space e` explorer used to write an empty 0-byte stub to disk immediately. Language servers with filesystem watchers picked the stub up and could crash on the first edit (surfaced in Vorto as "EOF from LSP server"). New files now open as unsaved buffers, and the file plus any missing parent directories are created on the first save — matching `:e` and the Vim / VS Code convention. Directories are still created on disk immediately.
+- **Dirty markers track buffers in inactive panes.** The buffer picker's `+` / `~` change markers no longer vanish for buffers parked in other split panes, and the `:q` unsaved-changes guard now blocks a quit when a dirty buffer is shown in an inactive pane instead of silently discarding it.

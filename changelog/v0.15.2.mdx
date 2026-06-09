@@ -1,0 +1,14 @@
+---
+title: "0.15.2"
+description: "The file explorer folds single-child directory chains into one compact row, and wide cursor glyphs stay visible at the right edge of the viewport."
+---
+
+Released **June 5, 2026**.
+
+## Improvements
+
+- **Compact folders in the file explorer.** The `Space e` explorer now folds a chain of directories where each link is the only child of its parent into a single row — `src/finder/explorer` instead of three nested rows, the VS Code "compact folders" behavior. Folding stops at any directory that holds a file or a second sibling, so files always keep their own row. This is controlled by the `editor.compact_folders` setting (default `true`); set it to `false` to give every directory its own row. See [Editor settings](/configuration/editor-settings#compact-folders).
+
+## Bug fixes
+
+- **Wide cursor glyphs stay visible at the right edge.** Horizontal scroll positioned only the cursor's left cell at the viewport edge, ignoring the glyph's width. A 2-cell CJK character or emoji landing on the last column had its second cell pushed off-screen — and since a terminal can't draw a wide glyph in one remaining cell, the character vanished as the cursor moved onto it. Vorto now accounts for the cursor character's cell width so both cells stay on screen.

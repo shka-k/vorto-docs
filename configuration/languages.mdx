@@ -76,16 +76,27 @@ To disable all LSP for a language, set it to an empty list:
 lsp = []
 ```
 
-### `formatter.command` and `formatter.args`
+### `formatter`
 
-**Type:** string and list of strings
+**Type:** list of strings, or a table with `command` and `args`
 
-Defines an external formatter. Vorto pipes the buffer's text on stdin and replaces the buffer with stdout. When unset, Vorto falls back to `textDocument/formatting` against the first attached LSP on save. The `formatter` table is replaced whole — `command` and `args` always go together.
+Controls what formats the buffer on save. The field is polymorphic — it takes either of two shapes:
 
-```toml
-[languages.python]
-formatter = { command = "black", args = ["-q", "-"] }
-```
+- **A list of LSP server names** formats with those servers' `textDocument/formatting`, tried in priority order. The first server that is attached and returns a successful result wins.
+
+  ```toml
+  [languages.typescript]
+  formatter = ["biome"]
+  ```
+
+- **A `command` / `args` table** defines an external formatter. Vorto pipes the buffer's text on stdin and replaces the buffer with stdout.
+
+  ```toml
+  [languages.python]
+  formatter = { command = "black", args = ["-q", "-"] }
+  ```
+
+When unset, Vorto falls back to `textDocument/formatting` against the first attached LSP on save. The `formatter` value is replaced whole on override — for the command table, `command` and `args` always go together.
 
 ## Adding a new language
 
@@ -135,6 +146,15 @@ formatter = { command = "black", args = ["-q", "-"] }
 
 [languages.markdown]
 formatter = { command = "prettier", args = ["--parser", "markdown", "--stdin-filepath", "stdin.md"] }
+```
+
+## Formatting with an LSP server
+
+To format with a language server instead of an external command, set `formatter` to a list of server names. Vorto requests `textDocument/formatting` from each in order and stops at the first one that is attached and succeeds:
+
+```toml
+[languages.typescript]
+formatter = ["biome", "vtsls"]
 ```
 
 ## Referencing an LSP server

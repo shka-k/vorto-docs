@@ -19,6 +19,10 @@ The prompt supports Tab completion for command names and, where applicable, for 
 | `:w` | `:write` | Save the current buffer |
 | `:w <path>` | `:write <path>` | Save to a specific path |
 | `:w!` | `:write!` | Save, creating any missing parent directories |
+| `:wa` | `:wall`, `:write-all` | Save every dirty buffer (active, parked, and sleeping); skips clean and unnamed scratch buffers |
+| `:wa!` | `:wall!`, `:write-all!` | Save all, overwriting any file that drifted on disk since load |
+| `:wqa` | `:xa`, `:xall`, `:wqall` | Save every dirty buffer and quit (only quits when all wrote cleanly) |
+| `:wqa!` | `:xa!`, `:wqall!` | Save all (overwriting disk drift) and quit |
 | `:q` | `:quit` | Quit |
 | `:q!` | `:quit!` | Force quit, discarding unsaved changes |
 | `:wq` | `:x` | Save and quit |
@@ -107,6 +111,14 @@ In the modal, `j` / `k` move the selection, `Enter` installs, `d` removes, and `
 
 The agent runs under a pseudo-terminal inside Vorto. While its pane is focused, every key goes to the agent except `Ctrl-W`, which moves window focus (`Ctrl-W h/j/k/l/w`). See [AI agents](/editing/agent).
 
+### Configuration
+
+| Command | Aliases | Description |
+|---------|---------|-------------|
+| `:config-reload` | `:reload-config` | Re-read `config.toml` and re-apply the settings that can change live |
+
+`:config-reload` re-reads your config using the same path resolution as startup and re-applies the keymap, cursor shapes, `[editor]` / `[finder]` options, the agent catalog, grammar recipes, and the active theme. A load or parse error leaves the running config untouched and shows a toast. Already-running subsystems — LSP servers and the syntax / preview workers — keep their startup snapshot and need a restart to pick up changes. See [Configuration overview](/configuration/overview).
+
 ### Theming
 
 | Command | Aliases | Description |
@@ -161,7 +173,7 @@ Open with `Space g` in Normal mode. The picker lists every file that differs fro
 
 ### File explorer
 
-Open with `Space e` in Normal mode. Unlike the fuzzy file picker, the explorer is a persistent tree view of the workspace directory. Files and folders are grouped by their parent directory (toggle this with the `compact_folders` editor setting). Selecting a file opens it in the active pane.
+Open with `Space e` in Normal mode. Unlike the fuzzy file picker, the explorer is a persistent tree view of the workspace directory. By default, a chain of directories where each link is the only child of its parent is folded into a single row (the VS Code "compact folders" behavior); set `compact_folders = false` to give every directory its own row. Selecting a file opens it in the active pane.
 
 ### Diagnostics picker
 
